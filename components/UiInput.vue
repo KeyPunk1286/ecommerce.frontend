@@ -12,7 +12,7 @@
 
 <script setup>
 const props = defineProps({
-  text: {
+  type: {
     type: String,
     default: "",
   },
