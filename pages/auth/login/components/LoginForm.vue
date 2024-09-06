@@ -1,6 +1,7 @@
 <template>
   <div class="login__form">
     <LoginFormField
+        label="Email"
         type="text"
         placeholder="Enter your email"
         :value="formData.email"
@@ -10,6 +11,7 @@
         @blur="handleBlurEmail"
     />
     <LoginFormField
+        label="Password"
         type="text"
         placeholder="Enter your password"
         :value="formData.password"

@@ -1,6 +1,6 @@
 <template>
   <div class="login__form__field">
-    <div class="login__form__field-label">Email</div>
+    <div class="login__form__field-label">{{ label }}</div>
     <div class="login__form__field-input">
       <UiInput
           :type="type"
@@ -19,6 +19,10 @@
 
 <script setup>
 const props = defineProps({
+  label: {
+    type: String,
+    default: "",
+  },
   type: {
     type: String,
     default: "",
