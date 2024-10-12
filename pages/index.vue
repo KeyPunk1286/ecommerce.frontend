@@ -3,8 +3,11 @@
 </template>
 
 <script setup>
-
 import {ref} from "vue";
+
+definePageMeta({
+  middleware: 'auth'
+});
 
 const pageName = ref('Home');
 

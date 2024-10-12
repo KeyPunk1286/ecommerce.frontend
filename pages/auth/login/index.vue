@@ -14,6 +14,10 @@ import LoginForm from "~/pages/auth/login/components/LoginForm.vue";
 
 import { pageName } from "~/pages/auth/login/composables/data.js";
 
+definePageMeta({
+  middleware: 'not-auth'
+});
+
 </script>
 
 <style scoped lang="scss">

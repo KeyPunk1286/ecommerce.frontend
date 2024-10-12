@@ -1,8 +1,7 @@
 <template>
   <div class="registration">
     <div class="registration__page-name">{{ pageName }} page</div>
-
-    <registration-form />
+    <RegistrationForm />
   </div>
 </template>
 
@@ -10,6 +9,10 @@
 import { ref } from "vue";
 
 import RegistrationForm from "./components/RegistrationForm.vue";
+
+definePageMeta({
+  middleware: 'not-auth'
+});
 
 const pageName = ref("Registration");
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="registration__form">
-    <registration-form-field
+    <RegistrationFormField
       type="text"
       :value="registrationForm.username"
       placeholder="Enter your username"
@@ -10,7 +10,7 @@
       @blur="handleUsernameBlur"
       :errorsFromData="errorsFromRegistrationData.username"
     />
-    <registration-form-field
+    <RegistrationFormField
       type="text"
       :value="registrationForm.login"
       placeholder="Enter your email"
@@ -20,7 +20,7 @@
       @blur="handleLoginBlur"
       :errorsFromData="errorsFromRegistrationData.login"
     />
-    <registration-form-field
+    <RegistrationFormField
       type="password"
       :value="registrationForm.password"
       placeholder="Enter your password"
@@ -30,7 +30,7 @@
       @blur="handlePasswordBlur"
       :errorsFromData="errorsFromRegistrationData.password"
     />
-    <registration-form-field
+    <RegistrationFormField
       type="password"
       :value="registrationForm.rePassword"
       placeholder="Enter your password"
@@ -40,7 +40,7 @@
       @blur="handleRePasswordBlur"
       :errorsFromData="errorsFromRegistrationData.rePassword"
     />
-    <registration-form-submit @submit="handleSubmitRegistration" />
+    <RegistrationFormSubmit @submit="handleSubmitRegistration" />
   </div>
 </template>
 
@@ -60,6 +60,11 @@ import {
   registrationForm,
   errorsFromRegistrationData,
 } from "../composables/dataForRegistration.js";
+
+import axios from "axios";
+
+const router = useRouter()
+
 
 // username block
 const handleUsernameInput = (event) => {
@@ -139,12 +144,31 @@ const handleRePasswordBlur = () => {
   );
 };
 
+const doRegistrationUser = async (data = {}) => {
+  return await axios.post('http://localhost:8888/auth/registration', data)
+}
+
 // button submit
-const handleSubmitRegistration = () => {
+const handleSubmitRegistration = async () => {
   dovalidateRegistrationForm();
 
-  if (isRegistrationFormValid(errorsFromRegistrationData))
-    alert("Додаємо нового Юзера!");
+  if (isRegistrationFormValid(errorsFromRegistrationData)) {
+    try {
+      const dataThatWillSend = {
+        email: registrationForm.login,
+        firstname: registrationForm.username, // TODO :: Fix to real field
+        secondname: registrationForm.username, // TODO :: Fix to real field
+        lastname: registrationForm.username, // TODO :: Fix to real field
+        password: registrationForm.password,
+      };
+
+      await doRegistrationUser(dataThatWillSend);
+      await router.push('/auth/login');
+    } catch(e) {
+      console.log('SUBMIT CATCH', e.message);
+    }
+  }
+
 };
 </script>
 
