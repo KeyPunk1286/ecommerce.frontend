@@ -41,11 +41,14 @@ import {
   isFormValid,
 } from "~/pages/auth/login/composables/validation.js";
 
-// Тут у нас починається блок де будуть функції
-// які відповідають за валідацію та заповнення
-// полів в formData та errorsFormData
+import axios from "axios";
+import useLocalStorage from "~/composables/useLocalStorage.js";
 
-// Блок функцій для поля email
+import {ACCESS_TOKEN_STORAGE_KEY} from "~/constants/global.js";
+import { useAuthStore } from '~/stores/auth';
+
+const router = useRouter()
+
 const handleFocusEmail = () => {
   isEmailValid(formData.email, errorsFormData.email);
 }
@@ -56,9 +59,7 @@ const handleInputEmail = (event) => {
 const handleBlurEmail = () => {
   isEmailValid(formData.email, errorsFormData.email);
 }
-// Кінець блоку функцій для поля email
 
-// Блок функцій для поля password
 const handleFocusPassword = () => {
   isPasswordValid(formData.password, errorsFormData.password);
 }
@@ -69,17 +70,36 @@ const handleInputPassword = (event) => {
 const handleBlurPassword = () => {
   isPasswordValid(formData.password, errorsFormData.password);
 }
-// Кінець блоку функцій для поля password
 
-const handleSubmitForm = () => {
-  // 1. Запускаємо функцію яка просто запустить перевірку кожно поля форми
+const doLoginUser = async (data = {}) => {
+  return await axios.post('http://localhost:8888/auth/login', data)
+}
+
+
+const handleSubmitForm = async () => {
+
   doValidateForm();
 
-  // 2. Перевіряємо чи форма валідна
-  // - - Якщо форма валідна -> Відправляємо запит на сервер на авторизацію
   if (isFormValid(errorsFormData)) {
-    // Тут самого запиту поки що немає - пізніше напишемо
-    alert('ОТПРАВЛЯЄМ ЗАПРОС НА СЕРВЕР НА АВТОРИЗАЦІЮ');
+    try {
+      const dataThatWillSend = {
+        email: formData.email,
+        password: formData.password,
+      };
+
+      const response = await doLoginUser(dataThatWillSend);
+      const token = response?.data?.token;
+
+      const localStorage = useLocalStorage();
+      localStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, token);
+
+      const authStore = useAuthStore();
+      authStore.setAccessToken(token);
+
+      await router.push('/');
+    } catch(e) {
+      console.log(e.message);
+    }
   }
 }
 </script>
