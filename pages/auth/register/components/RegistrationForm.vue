@@ -155,17 +155,25 @@ const handleSubmitRegistration = async () => {
   if (isRegistrationFormValid(errorsFromRegistrationData)) {
     try {
       const dataThatWillSend = {
-        email: registrationForm.login,
-        firstname: registrationForm.username, // TODO :: Fix to real field
+        login: registrationForm.login,
+        username: registrationForm.username, // TODO :: Fix to real field
         secondname: registrationForm.username, // TODO :: Fix to real field
         lastname: registrationForm.username, // TODO :: Fix to real field
         password: registrationForm.password,
       };
 
       await doRegistrationUser(dataThatWillSend);
-      await router.push('/auth/login');
+      // await router.push('/auth/login');
     } catch(e) {
-      console.log('SUBMIT CATCH', e.message);
+      if (e?.status === 401) {
+        Object.entries(e?.response?.data?.errors).forEach(([key, errorMessages]) => {
+          if (errorsFromRegistrationData[key] !== undefined) {
+            errorsFromRegistrationData[key].isDirty = true;
+            errorsFromRegistrationData[key].errors = errorMessages;
+          }
+        });
+      }
+      console.log('ERROR:', e);
     }
   }
 

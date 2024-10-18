@@ -158,7 +158,9 @@ export const isRegistrationFormValid = (errorData) => {
 };
 
 export const isRegistrationValidateComputed = computed(() => {
-  return Object.values(errorsFromRegistrationData).every(
-    (filed) => filed.errors.length === 0
-  );
+  // return Object.values(errorsFromRegistrationData).every(
+  //   (filed) => filed.errors.length === 0
+  // );
+
+  return true;
 });
