@@ -4,52 +4,7 @@ import {
   errorsFromRegistrationData,
 } from "./dataForRegistration.js";
 
-export const isUsernameValid = (value, errorData) => {
-  errorData.isDirty = true;
-  errorData.errors = [];
-
-  if (value.length < 1) {
-    errorData.errors = ["Field username is required!"];
-    return;
-  }
-
-  if (value.length < 8) {
-    errorData.errors = ["Field username min length should be not less than 8"];
-    return;
-  }
-
-  if (value.length > 20) {
-    errorData.errors = ["Field username max length should be no more than 20"];
-    return;
-  }
-
-  const usernameRegex = /^[a-zA-Z0-9_]+$/;
-  if (!usernameRegex.test(value)) {
-    errorData.errors = [
-      "Username can only contain letters, numbers, and underscores",
-    ];
-    return;
-  }
-
-  if (value.trim() !== value) {
-    errorData.errors = ["Username cannot have leading or trailing spaces"];
-    return;
-  }
-
-  const reservedUsernames = ["admin", "root", "superuser"];
-  if (reservedUsernames.includes(value.toLowerCase())) {
-    errorData.errors = ["This username is reserved or not allowed"];
-    return;
-  }
-
-  if (/^\d+$/.test(value)) {
-    errorData.errors = ["Username cannot consist of only numbers"];
-    return;
-  }
-  return true;
-};
-
-export const isLoginValid = (value, errorData) => {
+export const isEmailValid = (value, errorData) => {
   errorData.isDirty = true;
   errorData.errors = [];
 
@@ -65,6 +20,115 @@ export const isLoginValid = (value, errorData) => {
   }
 
   return true;
+};
+
+export const isFirstNameValid = (value, errorData) => {
+  errorData.isDirty = true;
+  errorData.errors = [];
+
+  if (value.length < 1) {
+    errorData.errors = ["Field username is required!"];
+    return;
+  }
+
+  if (value.length < 2) {
+    errorData.errors = ["Field username min length should be not less than 2"];
+    return;
+  }
+
+  if (value.length > 20) {
+    errorData.errors = ["Field username max length should be no more than 20"];
+    return;
+  }
+
+  const usernameRegex = /^[a-zA-Zа-яА-ЯёЁіІїЇґҐ]+$/;
+  if (!usernameRegex.test(value)) {
+    errorData.errors = ["Username can only contain letters"];
+    return;
+  }
+
+  if (value.trim() !== value) {
+    errorData.errors = ["Username cannot have leading or trailing spaces"];
+    return;
+  }
+
+  // const reservedUsernames = ["admin", "root", "superuser"];
+  // if (reservedUsernames.includes(value.toLowerCase())) {
+  //   errorData.errors = ["This username is reserved or not allowed"];
+  //   return;
+  // }
+
+  // if (/^\d+$/.test(value)) {
+  //   errorData.errors = ["Username cannot consist of only numbers"];
+  //   return;
+  // }
+  // return true;
+};
+
+export const isSecondNameValid = (value, errorData) => {
+  errorData.isDirty = true;
+  errorData.errors = [];
+
+  if (value.length < 1) {
+    errorData.errors = ["Field secondname is required!"];
+    return;
+  }
+
+  if (value.length < 2) {
+    errorData.errors = [
+      "Field secondname min length should be not less than 2",
+    ];
+    return;
+  }
+
+  if (value.length > 20) {
+    errorData.errors = [
+      "Field secondname max length should be no more than 20",
+    ];
+    return;
+  }
+
+  const usernameRegex = /^[a-zA-Zа-яА-ЯёЁіІїЇґҐ]+$/;
+  if (!usernameRegex.test(value)) {
+    errorData.errors = ["Secondname can only contain letters"];
+    return;
+  }
+
+  if (value.trim() !== value) {
+    errorData.errors = ["Secondname cannot have leading or trailing spaces"];
+    return;
+  }
+};
+
+export const isLastNameValid = (value, errorData) => {
+  errorData.isDirty = true;
+  errorData.errors = [];
+
+  if (value.length < 1) {
+    errorData.errors = ["Field lastName is required!"];
+    return;
+  }
+
+  if (value.length < 2) {
+    errorData.errors = ["Field lastName min length should be not less than 2"];
+    return;
+  }
+
+  if (value.length > 20) {
+    errorData.errors = ["Field lastName max length should be no more than 20"];
+    return;
+  }
+
+  const usernameRegex = /^[a-zA-Zа-яА-ЯёЁіІїЇґҐ]+$/;
+  if (!usernameRegex.test(value)) {
+    errorData.errors = ["LastName can only contain letters"];
+    return;
+  }
+
+  if (value.trim() !== value) {
+    errorData.errors = ["LastName cannot have leading or trailing spaces"];
+    return;
+  }
 };
 
 export const isPasswordValid = (value, errorData) => {
@@ -137,11 +201,19 @@ export const isRePaswordValid = (value, value2, errorData) => {
 };
 
 export const dovalidateRegistrationForm = () => {
-  isUsernameValid(
-    registrationForm.username,
-    errorsFromRegistrationData.username
+  isEmailValid(registrationForm.email, errorsFromRegistrationData.email);
+  isFirstNameValid(
+    registrationForm.firstName,
+    errorsFromRegistrationData.firstName
   );
-  isLoginValid(registrationForm.login, errorsFromRegistrationData.login);
+  isSecondNameValid(
+    registrationForm.secondName,
+    errorsFromRegistrationData.secondName
+  );
+  isLastNameValid(
+    registrationForm.lastname,
+    errorsFromRegistrationData.lastname
+  );
   isPasswordValid(
     registrationForm.password,
     errorsFromRegistrationData.password

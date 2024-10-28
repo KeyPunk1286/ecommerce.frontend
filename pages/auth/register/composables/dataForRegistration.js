@@ -1,18 +1,28 @@
 import { reactive } from "vue";
 
 export const registrationForm = reactive({
-  username: "",
-  login: "",
+  email: "",
+  firstName: "",
+  secondName: "",
+  lastname: "",
   password: "",
   rePassword: "",
 });
 
 export const errorsFromRegistrationData = reactive({
-  username: {
+  email: {
     isDirty: false,
     errors: [],
   },
-  login: {
+  firstName: {
+    isDirty: false,
+    errors: [],
+  },
+  secondName: {
+    isDirty: false,
+    errors: [],
+  },
+  lastname: {
     isDirty: false,
     errors: [],
   },
