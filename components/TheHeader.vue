@@ -22,6 +22,10 @@ const navMenu = reactive([
     to: "/"
   },
   {
+    menuItemTitle: "Test",
+    to: "/test"
+  },
+  {
     menuItemTitle: "About",
     to: "/about"
   },
