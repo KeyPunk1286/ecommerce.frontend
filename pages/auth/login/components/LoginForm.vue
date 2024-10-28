@@ -1,25 +1,24 @@
 <template>
   <div class="login__form">
     <LoginFormField
-        label="Email"
-        type="text"
-        placeholder="Enter your email"
-        :value="formData.email"
-        :errorFormData="errorsFormData.email"
-        @input="handleInputEmail"
-        @focus="handleFocusEmail"
-        @blur="handleBlurEmail"
+      label="Email"
+      type="text"
+      placeholder="Enter your email"
+      :value="formData.email"
+      :errorFormData="errorsFormData.email"
+      @input="handleInputEmail"
+      @focus="handleFocusEmail"
+      @blur="handleBlurEmail"
     />
     <LoginFormField
-        label="Password"
-        type="text"
-        placeholder="Enter your password"
-        :value="formData.password"
-        :errorFormData="errorsFormData.password"
-        @input="handleInputPassword"
-        @focus="handleFocusPassword"
-        @blur="handleBlurPassword"
-
+      label="Password"
+      type="text"
+      placeholder="Enter your password"
+      :value="formData.password"
+      :errorFormData="errorsFormData.password"
+      @input="handleInputPassword"
+      @focus="handleFocusPassword"
+      @blur="handleBlurPassword"
     />
     <LoginFormSubmit @submit="handleSubmitForm" />
   </div>
@@ -31,7 +30,7 @@ import LoginFormSubmit from "~/pages/auth/login/components/LoginFormSubmit.vue";
 
 import {
   formData,
-  errorsFormData
+  errorsFormData,
 } from "~/pages/auth/login/composables/data.js";
 
 import {
@@ -44,40 +43,38 @@ import {
 import axios from "axios";
 import useLocalStorage from "~/composables/useLocalStorage.js";
 
-import {ACCESS_TOKEN_STORAGE_KEY} from "~/constants/global.js";
-import { useAuthStore } from '~/stores/auth';
+import { ACCESS_TOKEN_STORAGE_KEY } from "~/constants/global.js";
+import { useAuthStore } from "~/stores/auth";
 
-const router = useRouter()
+const router = useRouter();
 
 const handleFocusEmail = () => {
   isEmailValid(formData.email, errorsFormData.email);
-}
+};
 const handleInputEmail = (event) => {
   formData.email = event.target.value;
   isEmailValid(formData.email, errorsFormData.email);
-}
+};
 const handleBlurEmail = () => {
   isEmailValid(formData.email, errorsFormData.email);
-}
+};
 
 const handleFocusPassword = () => {
   isPasswordValid(formData.password, errorsFormData.password);
-}
+};
 const handleInputPassword = (event) => {
   formData.password = event.target.value;
   isPasswordValid(formData.password, errorsFormData.password);
-}
+};
 const handleBlurPassword = () => {
   isPasswordValid(formData.password, errorsFormData.password);
-}
+};
 
 const doLoginUser = async (data = {}) => {
-  return await axios.post('http://localhost:8888/auth/login', data)
-}
-
+  return await axios.post("http://localhost:8888/auth/login", data);
+};
 
 const handleSubmitForm = async () => {
-
   doValidateForm();
 
   if (isFormValid(errorsFormData)) {
@@ -88,6 +85,7 @@ const handleSubmitForm = async () => {
       };
 
       const response = await doLoginUser(dataThatWillSend);
+
       const token = response?.data?.token;
 
       const localStorage = useLocalStorage();
@@ -96,12 +94,21 @@ const handleSubmitForm = async () => {
       const authStore = useAuthStore();
       authStore.setAccessToken(token);
 
-      await router.push('/');
-    } catch(e) {
-      console.log(e.message);
+      // await router.push("/");
+    } catch (e) {
+      if (e?.response.status === 401) {
+        Object.entries(e?.response?.data?.errors).forEach(
+          ([key, errorMessage]) => {
+            if (errorsFormData[key] !== undefined) {
+              errorsFormData[key].isDirty = true;
+              errorsFormData[key].errors = errorMessage;
+            }
+          }
+        );
+      }
     }
   }
-}
+};
 </script>
 
 <style scoped lang="scss">
