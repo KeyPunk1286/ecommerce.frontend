@@ -1,42 +1,44 @@
 <template>
   <header class="header">
-    <div class="header__left">
-      Logo
-    </div>
+    <div class="header__left">Logo</div>
     <div class="header__right">
       <div class="header__right__nav">
         <div
-            v-for="item in navMenu" :key="item.to"
-            class="header__right__nav-item"><NuxtLink :to="item.to">{{ item.menuItemTitle }}</NuxtLink></div>
+          v-for="item in navMenu"
+          :key="item.to"
+          class="header__right__nav-item"
+        >
+          <NuxtLink :to="item.to">{{ item.menuItemTitle }}</NuxtLink>
+        </div>
       </div>
     </div>
   </header>
 </template>
 
 <script setup>
-import {reactive} from "vue";
+import { reactive } from "vue";
 
 const navMenu = reactive([
   {
     menuItemTitle: "Home",
-    to: "/"
+    to: "/",
   },
-  {
-    menuItemTitle: "Test",
-    to: "/test"
-  },
+  // {
+  //   menuItemTitle: "Test",
+  //   to: "/test"
+  // },
   {
     menuItemTitle: "About",
-    to: "/about"
+    to: "/about",
   },
   {
     menuItemTitle: "Login",
-    to: "/auth/login"
+    to: "/auth/login",
   },
   {
     menuItemTitle: "Register",
-    to: "/auth/register"
-  }
+    to: "/auth/register",
+  },
 ]);
 </script>
 
@@ -52,9 +54,9 @@ const navMenu = reactive([
   justify-content: space-between;
   align-items: center;
 
-  &__left {}
+  &__left {
+  }
   &__right {
-
     &__nav {
       width: 100%;
 
