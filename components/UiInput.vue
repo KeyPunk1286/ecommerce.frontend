@@ -35,6 +35,8 @@ const onBlur = (event) => emit("blur", event);
 
 <style scoped lang="scss">
 .input {
-  border-color: red;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 10px 20px;
 }
 </style>

@@ -2,6 +2,9 @@
   <div class="shop-table">
     <div v-if="isLoading">Loading...</div>
     <div v-else>
+      <div class="user-table__panel-top">
+        <UiButton @click="handleClickAddNew">Add new</UiButton>
+      </div>
       <table>
         <thead>
           <tr>
@@ -28,6 +31,9 @@
 <script setup>
 import axios from "axios";
 import { ref, onMounted, reactive } from "vue";
+import UiButton from "~/components/UiButton.vue";
+
+const emit = defineEmits(["switch"]);
 
 let isLoading = ref(true);
 let dataTable = reactive([]);
@@ -65,6 +71,17 @@ const handleRemoveShop = async (id) => {
 onMounted(async () => {
   await loadDataTable();
 });
+
+const handleClickAddNew = (event) => emit("switch", event);
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.user-table {
+  &__panel-top {
+    padding: 20px;
+    background-color: #112121;
+    display: flex;
+    justify-content: flex-start;
+  }
+}
+</style>
