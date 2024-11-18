@@ -2,6 +2,11 @@
   <div class="ui-field">
     <label>{{ props.label }}</label>
     <slot />
+    <div>
+      <ul>
+        <li v-for="error in errorsFromData.errors" :key="error">{{ error }}</li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -10,6 +15,10 @@ const props = defineProps({
   label: {
     type: String,
     default: "",
+  },
+  errorsFromData: {
+    type: Object,
+    default: () => ({ errors: [] }),
   },
 });
 </script>

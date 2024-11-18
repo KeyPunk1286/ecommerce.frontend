@@ -23,6 +23,9 @@
             <td @click="handleRemoveCustomer(row.id)" style="cursor: pointer">
               x
             </td>
+            <td @click="handleEditCustomer(row.id)" style="cursor: pointer">
+              edit
+            </td>
           </tr>
         </tbody>
       </table>
@@ -35,7 +38,7 @@ import axios from "axios";
 import { ref, onMounted, reactive } from "vue";
 import UiButton from "~/components/UiButton.vue";
 
-const emit = defineEmits(["switch"]);
+const emit = defineEmits(["switch", "switchToEdit"]);
 
 let isLoading = ref(true);
 let dataTable = reactive([]);
@@ -75,6 +78,7 @@ onMounted(async () => {
 });
 
 const handleClickAddNew = (event) => emit("switch", event);
+const handleEditCustomer = (event) => emit("switchToEdit", event);
 </script>
 
 <style lang="scss" scoped>

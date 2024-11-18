@@ -7,16 +7,18 @@
       />
     </div>
     <div class="table-content__right-side">
-      <component :is="activeTableComponent"
-                 @clickGoBack="handleClickGoBack"
-                 @switch="handleSwitch"
+      <component
+        :is="activeTableComponent"
+        :selectId="idSelect"
+        @clickGoBack="handleClickGoBack"
+        @switch="handleSwitch"
+        @switchToEdit="handleEditUser"
       />
     </div>
   </div>
 </template>
 
 <script setup>
-
 import { reactive, ref, computed } from "vue";
 import TableNameList from "../TableContent/components/TableNameList.vue";
 import UsersTableComponent from "../TableContent/components/UsersTableComponent.vue";
@@ -25,14 +27,22 @@ import ShopsTableComponent from "../TableContent/components/ShopsTableComponent.
 import ShopsTableAddNewComponent from "../TableContent/components/ShopTableAddNewComponent.vue";
 import CustomersTableComponent from "../TableContent/components/CustomersTableComponent.vue";
 import CustomersTableAddNewComponent from "../TableContent/components/CustomerTableAddNewComponent.vue";
+import UsersEditComponent from "../TableContent/components/EditComponent/UsersEditComponent.vue";
+import ShopEditComponent from "../TableContent/components/EditComponent/ShopEditComponent.vue";
+import CustomersEditComponents from "../TableContent/components/EditComponent/CustomersEditComponents.vue";
 
 const activeTable = ref(0);
+const idSelect = ref(null);
 const tableListObject = reactive([
   {
     title: "Users",
     tableComponent: UsersTableComponent,
     addNew: {
       component: UsersTableAddNewComponent,
+      active: false,
+    },
+    editComponent: {
+      component: UsersEditComponent,
       active: false,
     },
   },
@@ -42,7 +52,11 @@ const tableListObject = reactive([
     addNew: {
       component: ShopsTableAddNewComponent,
       active: false,
-    }
+    },
+    editComponent: {
+      component: ShopEditComponent,
+      active: false,
+    },
   },
   {
     title: "Customers",
@@ -50,7 +64,11 @@ const tableListObject = reactive([
     addNew: {
       component: CustomersTableAddNewComponent,
       active: false,
-    }
+    },
+    editComponent: {
+      component: CustomersEditComponents,
+      active: false,
+    },
   },
 ]);
 
@@ -59,20 +77,34 @@ const handleChangeTableComponent = (index) => {
 };
 
 const activeTableComponent = computed(() => {
-  const activeTableComponent = tableListObject[activeTable.value];
+  const activeComponent = tableListObject[activeTable.value];
 
-  return activeTableComponent?.addNew.active ?
-      activeTableComponent?.addNew.component : activeTableComponent.tableComponent;
+  if (activeComponent?.addNew.active) {
+    return activeComponent?.addNew.component;
+  } else if (activeComponent?.editComponent.active) {
+    return activeComponent?.editComponent.component;
+  } else {
+    return activeComponent?.tableComponent;
+  }
+
+  // return activeTableComponent?.addNew.active
+  //   ? activeTableComponent?.addNew.component
+  //   : activeTableComponent.tableComponent;
 });
 
 const handleSwitch = () => {
-  return tableListObject[activeTable.value].addNew.active = true;
-}
+  return (tableListObject[activeTable.value].addNew.active = true);
+};
 
 const handleClickGoBack = () => {
-  return tableListObject[activeTable.value].addNew.active = false;
-}
+  tableListObject[activeTable.value].addNew.active = false;
+  tableListObject[activeTable.value].editComponent.active = false;
+};
 
+const handleEditUser = (event) => {
+  idSelect.value = event;
+  tableListObject[activeTable.value].editComponent.active = true;
+};
 </script>
 
 <style lang="scss" scoped></style>
