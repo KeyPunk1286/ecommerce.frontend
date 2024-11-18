@@ -25,6 +25,9 @@
             <td>{{ row.created_at }}</td>
             <td>{{ row.updated_at }}</td>
             <td @click="handleRemoveUser(row.id)" style="cursor: pointer">x</td>
+            <td @click="handleEditUser(row.id)" style="cursor: pointer">
+              edit
+            </td>
           </tr>
         </tbody>
       </table>
@@ -37,7 +40,7 @@ import axios from "axios";
 import { ref, onMounted, reactive } from "vue";
 import UiButton from "~/components/UiButton.vue";
 
-const emit = defineEmits(["switch"]);
+const emit = defineEmits(["switch", "switchToEdit"]);
 
 let isLoading = ref(true);
 let dataTable = reactive([]);
@@ -74,6 +77,7 @@ const handleRemoveUser = async (id) => {
 };
 
 const handleClickAddNew = (event) => emit("switch", event);
+const handleEditUser = (event) => emit("switchToEdit", event);
 
 onMounted(async () => {
   await loadDataTable();
@@ -81,7 +85,6 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-
 .user-table {
   &__panel-top {
     padding: 20px;

@@ -2,119 +2,234 @@
   <div class="user-table">
     <div v-if="isLoading">Loading...</div>
     <div v-else>
-
       <div class="user-table__panel-top">
-
         <UiButton @click="handleClickGoBack"><--- Go Back</UiButton>
-
       </div>
 
       <div class="user-table__panel-main">
-
-        <UiField label="Email">
-          <UiInput placeholder="Enter Email"/>
+        <UiField label="Email" :errorsFromData="errorsFromNewUser.email">
+          <UiInput
+            type="text"
+            placeholder="Enter Email"
+            :value="dataNewUser.email"
+            @input="handleInputEmail"
+            @focus="handleFocusEmail"
+            @blur="handleBlurEmail"
+          />
         </UiField>
 
-        <UiField label="First name">
-          <UiInput placeholder="Enter First name"/>
+        <UiField
+          label="First name"
+          :errorsFromData="errorsFromNewUser.firstname"
+        >
+          <UiInput
+            type="text"
+            placeholder="Enter First name"
+            :value="dataNewUser.firstname"
+            @input="handleImputFirstname"
+            @focus="handleFocusFirstname"
+            @blur="handleBlurFirstname"
+          />
         </UiField>
 
-        <UiField label="Second name">
-          <UiInput placeholder="Enter Second name"/>
+        <UiField
+          label="Second name"
+          :errorsFromData="errorsFromNewUser.secondname"
+        >
+          <UiInput
+            type="text"
+            placeholder="Enter Second name"
+            :value="dataNewUser.secondname"
+            @input="handleImputSecondname"
+            @focus="handleFocusSecondname"
+            @blur="handleBlurSecondname"
+          />
         </UiField>
 
-        <UiField label="Last name">
-          <UiInput placeholder="Enter last name"/>
+        <UiField label="Last name" :errorsFromData="errorsFromNewUser.lastname">
+          <UiInput
+            type="text"
+            placeholder="Enter last name"
+            :value="dataNewUser.lastname"
+            @input="handleImputLastname"
+            @focus="handleFocusLastname"
+            @blur="handleBlurLastname"
+          />
         </UiField>
 
-        <div class="user-table__panel-bottom">
-          <UiButton @click="handleClickSave">Save</UiButton>
-        </div>
+        <UiField label="Password" :errorsFromData="errorsFromNewUser.password">
+          <UiInput
+            type="text"
+            placeholder="Enter password"
+            :value="dataNewUser.password"
+            @input="handleImputPassword"
+            @focus="handleFocusPassword"
+            @blur="handleBlurPassword"
+          />
+        </UiField>
 
+        <UiField
+          label="re-enter your password"
+          :errorsFromData="errorsFromNewUser.rePassword"
+        >
+          <UiInput
+            type="text"
+            placeholder="Enter password"
+            :value="dataNewUser.rePassword"
+            @input="handleImputRePassword"
+            @focus="handleFocusRePsword"
+            @blur="handleBlurRePassword"
+          />
+        </UiField>
+
+        <div><button @click="handleSubmitNewUser">Save</button></div>
       </div>
-
-<!--      <table>-->
-<!--        <thead>-->
-<!--          <tr>-->
-<!--            <th>Email</th>-->
-<!--            <th>First name</th>-->
-<!--            <th>Second name</th>-->
-<!--            <th>Last name</th>-->
-<!--            <th>Created</th>-->
-<!--            <th>Updated</th>-->
-<!--          </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--          <tr v-for="row in dataTable" :key="row.id">-->
-<!--            <td>{{ row.email }}</td>-->
-<!--            <td>{{ row.firstname }}</td>-->
-<!--            <td>{{ row.secondname }}</td>-->
-<!--            <td>{{ row.lastname }}</td>-->
-<!--            <td>{{ row.created_at }}</td>-->
-<!--            <td>{{ row.updated_at }}</td>-->
-<!--            <td @click="handleRemoveUser(row.id)" style="cursor: pointer">x</td>-->
-<!--          </tr>-->
-<!--        </tbody>-->
-<!--      </table>-->
     </div>
   </div>
 </template>
 
 <script setup>
 import axios from "axios";
-import { ref, onMounted, reactive } from "vue";
+import { ref } from "vue";
+
 import UiField from "~/components/UiField.vue";
+import { dataNewUser, errorsFromNewUser } from "../composables/data.js";
+import {
+  isEmailValid,
+  isFirstNameValid,
+  isSecondnameValid,
+  isLastnameValid,
+  isPasswordValid,
+  isRePasswordValid,
+  doValidateErrorForm,
+  isNewUserFormValid,
+} from "../composables/validationForNewUser.js";
 
-let isLoading = ref(true);
-let dataTable = reactive([]);
+let isLoading = ref(false);
 
-const loadDataTable = async () => {
-  isLoading.value = true;
-  try {
-    const response = await axios.get("http://localhost:8888/users/all");
-    // dataTable = response.data ?? [];
-    dataTable.splice(0, dataTable.length, ...(response.data ?? []));
-  } catch (error) {
-    console.error(error.message);
-  } finally {
-    isLoading.value = false;
-  }
+//email field ==============================================
+const handleInputEmail = (event) => {
+  dataNewUser.email = event.target.value;
+  isEmailValid(dataNewUser.email, errorsFromNewUser.email);
+};
+const handleFocusEmail = () => {
+  isEmailValid(dataNewUser.email, errorsFromNewUser.email);
+};
+const handleBlurEmail = () => {
+  isEmailValid(dataNewUser.email, errorsFromNewUser.email);
+};
+//firstname field ===========================================
+const handleImputFirstname = (event) => {
+  dataNewUser.firstname = event.target.value;
+  isFirstNameValid(dataNewUser.firstname, errorsFromNewUser.firstname);
+};
+const handleFocusFirstname = () => {
+  isFirstNameValid(dataNewUser.firstname, errorsFromNewUser.firstname);
+};
+const handleBlurFirstname = () => {
+  isFirstNameValid(dataNewUser.firstname, errorsFromNewUser.firstname);
+};
+//secondname field ===========================================
+const handleImputSecondname = (event) => {
+  dataNewUser.secondname = event.target.value;
+  isSecondnameValid(dataNewUser.secondname, errorsFromNewUser.secondname);
+};
+const handleFocusSecondname = () => {
+  isSecondnameValid(dataNewUser.secondname, errorsFromNewUser.secondname);
+};
+const handleBlurSecondname = () => {
+  isSecondnameValid(dataNewUser.secondname, errorsFromNewUser.secondname);
+};
+//lastname filed ============================================
+const handleImputLastname = (event) => {
+  dataNewUser.lastname = event.target.value;
+  isLastnameValid(dataNewUser.lastname, errorsFromNewUser.lastname);
+};
+const handleFocusLastname = () => {
+  isLastnameValid(dataNewUser.lastname, errorsFromNewUser.lastname);
+};
+const handleBlurLastname = () => {
+  isLastnameValid(dataNewUser.lastname, errorsFromNewUser.lastname);
+};
+//password field =============================================
+const handleImputPassword = (event) => {
+  dataNewUser.password = event.target.value;
+  isPasswordValid(dataNewUser.password, errorsFromNewUser.password);
+};
+const handleFocusPassword = () => {
+  isPasswordValid(dataNewUser.password, errorsFromNewUser.password);
+};
+const handleBlurPassword = () => {
+  isPasswordValid(dataNewUser.password, errorsFromNewUser.password);
+};
+//rePassword field ===========================================
+const handleImputRePassword = (event) => {
+  dataNewUser.rePassword = event.target.value;
+  isRePasswordValid(
+    dataNewUser.rePassword,
+    dataNewUser.password,
+    errorsFromNewUser.rePassword
+  );
+};
+const handleFocusRePsword = () => {
+  isRePasswordValid(
+    dataNewUser.rePassword,
+    dataNewUser.password,
+    errorsFromNewUser.rePassword
+  );
+};
+const handleBlurRePassword = () => {
+  isRePasswordValid(
+    dataNewUser.rePassword,
+    dataNewUser.password,
+    errorsFromNewUser.rePassword
+  );
 };
 
-const removeDataItem = async (id) => {
-  isLoading.value = true;
-  try {
-    await axios.delete(`http://localhost:8888/users/${id}`);
-    const index = dataTable.findIndex((item) => item.id === id);
-    if (index !== -1) dataTable.splice(index, 1);
-  } catch (error) {
-    console.error(error.message);
-  } finally {
-    isLoading.value = false;
-  }
-};
-
-const handleRemoveUser = async (id) => {
-  await removeDataItem(id);
-  await loadDataTable();
-};
-
-onMounted(async () => {
-  await loadDataTable();
-});
-
-
+// goBack ====================================================
 const emit = defineEmits(["clickGoBack"]);
-
 const handleClickGoBack = (event) => emit("clickGoBack", event);
 
-const handleClickSave = (event) => {
-  handleClickGoBack(event)
-}
+const doRegisterNewUser = async (data = {}) => {
+  return await axios.post("http://localhost:8888/users", data);
+};
+
+// Submit
+const handleSubmitNewUser = async () => {
+  doValidateErrorForm(dataNewUser, errorsFromNewUser);
+  if (isNewUserFormValid(errorsFromNewUser)) {
+    try {
+      const POST_DATA = {
+        email: "dataNewUser.email",
+        firstname: dataNewUser.firstname,
+        secondname: dataNewUser.secondname,
+        lastname: dataNewUser.lastname,
+        password: dataNewUser.password,
+      };
+      await doRegisterNewUser(POST_DATA);
+      dataNewUser.email = "";
+      dataNewUser.firstname = "";
+      dataNewUser.secondname = "";
+      dataNewUser.lastname = "";
+      dataNewUser.password = "";
+
+      handleClickGoBack();
+    } catch (error) {
+      if (error?.response.status === 400) {
+        const resDataErrors = error?.response.data.errors;
+        Object.entries(resDataErrors).forEach(([key, errorMessage]) => {
+          if (errorsFromNewUser[key] !== undefined) {
+            errorsFromNewUser[key].isDirty = true;
+            errorsFromNewUser[key].errors = errorMessage;
+          }
+        });
+      }
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-
 .user-table {
   &__panel-top {
     padding: 20px;
