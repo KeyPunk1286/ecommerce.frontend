@@ -12,11 +12,11 @@ export const isEmailValid = (value, errorData) => {
   }
 
   // isEmail
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailPattern.test(value)) {
-    errorData.errors.push("Invalid email format!");
-    return false;
-  }
+  // const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // if (!emailPattern.test(value)) {
+  //   errorData.errors.push("Invalid email format!");
+  //   return false;
+  // }
 
   return true;
 };
