@@ -1,9 +1,11 @@
 <template>
   <div class="customer-table">
     <div class="customer-table__panel-top">
-      <UiButton @click="handleClickGoBack"><--- Go Back</UiButton>
+      <UiButton @click="handleClickGoBack"
+        ><i class="fa-solid fa-backward"></i> Back</UiButton
+      >
     </div>
-    <div class="customer-table__panel-main">
+    <div class="customer-table__panel-main panel-main">
       <UiField label="title" :errorsFromData="errorsFromNewCustomer.title">
         <UiInput
           type="text"
@@ -24,7 +26,11 @@
           @blur="handleBlurUserID"
         />
       </UiField>
-      <UiField label="Status" :errorsFromData="errorsFromNewCustomer.status">
+      <UiField
+        class="panel-main__checkbox"
+        label="Status"
+        :errorsFromData="errorsFromNewCustomer.status"
+      >
         <div>Select the status: active shop or not.</div>
         <div>
           <input
@@ -46,7 +52,7 @@
         </div>
       </UiField>
     </div>
-    <div>
+    <div class="customer-table__button-save">
       <button @click="handleSubmitNewCustomer">ADD NEW CUSTOMER</button>
     </div>
   </div>
@@ -138,12 +144,49 @@ const handleClickGoBack = (event) => emit("clickGoBack", event);
 </script>
 
 <style lang="scss" scoped>
-.user-table {
+.customer-table {
   &__panel-top {
     padding: 20px;
     background-color: #112121;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
+    margin-bottom: 20px;
+    button {
+      background-color: #ffffff;
+      padding: 10px 5px;
+      transition: background-color 0.3s ease;
+      &:hover {
+        background-color: #112121;
+      }
+    }
+  }
+  &__panel-main {
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+    margin-bottom: 20px;
+  }
+  &__button-save {
+    display: flex;
+    justify-content: center;
+    button {
+      background-color: #ffffff;
+      padding: 10px 5px;
+      transition: background-color 0.3s ease;
+      &:hover {
+        background-color: #112121;
+      }
+    }
+  }
+  .panel-main {
+    &__checkbox {
+      display: flex;
+      flex-direction: column;
+      row-gap: 10px;
+      input {
+        margin-right: 5px;
+      }
+    }
   }
 }
 </style>

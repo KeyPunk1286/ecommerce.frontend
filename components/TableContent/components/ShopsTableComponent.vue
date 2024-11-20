@@ -1,11 +1,11 @@
 <template>
-  <div class="shop-table">
+  <div class="shop-content">
     <div v-if="isLoading">Loading...</div>
     <div v-else>
-      <div class="user-table__panel-top">
+      <div class="shop-content__panel-top">
         <UiButton @click="handleClickAddNew">Add new</UiButton>
       </div>
-      <table>
+      <table class="shop-content__table">
         <thead>
           <tr>
             <th>title</th>
@@ -20,9 +20,11 @@
             <td>{{ row.is_active }}</td>
             <td>{{ row.created_at }}</td>
             <td>{{ row.updated_at }}</td>
-            <td @click="handleRemoveShop(row.id)" style="cursor: pointer">x</td>
+            <td @click="handleRemoveShop(row.id)" style="cursor: pointer">
+              <i class="fas fa-times" style="color: red"></i>
+            </td>
             <td @click="handleEditShop(row.id)" style="cursor: pointer">
-              edit
+              <i class="fas fa-edit"></i>
             </td>
           </tr>
         </tbody>
@@ -80,12 +82,26 @@ const handleEditShop = (event) => emit("switchToEdit", event);
 </script>
 
 <style lang="scss" scoped>
-.user-table {
+.shop-content {
   &__panel-top {
     padding: 20px;
     background-color: #112121;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
+    margin-bottom: 30px;
+  }
+  &__table {
+    th {
+      padding: 10px;
+      background-color: #224141;
+    }
+    tr:hover td {
+      background-color: #224141;
+    }
+    td {
+      padding: 5px;
+      border-bottom: 1px #112121 solid;
+    }
   }
 }
 </style>

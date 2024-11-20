@@ -1,53 +1,65 @@
 <template>
   <div class="shop-edit">
-    <div><button @click="handleClickGoBack"><---clickGoBack</button></div>
-
-    <UiField
-      label="Customer_id"
-      :errorsFromData="errorsFromNewShop.customer_id"
-    >
-      <UiInput
-        type="text"
-        placeholder="Enter customer_id"
-        :value="shop.customer_id"
-        @input="handleInputCustomerId"
-        @focus="handleFocusCustomerId"
-        @blur="handleBlurCustomerId"
-      />
-    </UiField>
-
-    <UiField label="Title shop" :errorsFromData="errorsFromNewShop.title">
-      <UiInput
-        type="text"
-        placeholder="Enter title shop"
-        :value="shop.title"
-        @input="handleInputTitleShop"
-        @focus="handleFocusTitleShop"
-        @blur="handleBlurTitleShop"
-      />
-    </UiField>
-    <UiField label="is_active field">
-      <div>
-        <input
-          id="trueField"
-          type="checkbox"
-          :checked="shop.is_active === true"
-          @change="handleCheckboxChange(true)"
+    <div class="shop-edit__button-back">
+      <button @click="handleClickGoBack">
+        <i class="fa-solid fa-backward"></i> Back
+      </button>
+    </div>
+    <div class="shop-edit__form">
+      <UiField
+        label="Customer_id"
+        :errorsFromData="errorsFromNewShop.customer_id"
+      >
+        <UiInput
+          type="text"
+          placeholder="Enter customer_id"
+          :value="shop.customer_id"
+          @input="handleInputCustomerId"
+          @focus="handleFocusCustomerId"
+          @blur="handleBlurCustomerId"
         />
-        <label for="trueField">true</label>
-      </div>
-      <div>
-        <input
-          id="falseField"
-          type="checkbox"
-          :checked="shop.is_active === false"
-          @change="handleCheckboxChange(false)"
-        />
-        <label for="falseField">false</label>
-      </div>
-    </UiField>
+      </UiField>
+    </div>
 
-    <div><button @click="handleSaveChanges">Save Changes</button></div>
+    <div class="shop-edit__form">
+      <UiField label="Title shop" :errorsFromData="errorsFromNewShop.title">
+        <UiInput
+          type="text"
+          placeholder="Enter title shop"
+          :value="shop.title"
+          @input="handleInputTitleShop"
+          @focus="handleFocusTitleShop"
+          @blur="handleBlurTitleShop"
+        />
+      </UiField>
+    </div>
+
+    <div class="shop-edit__form">
+      <UiField label="is_active field">
+        <div class="shop-edit__input">
+          <input
+            id="trueField"
+            type="checkbox"
+            :checked="shop.is_active === true"
+            @change="handleCheckboxChange(true)"
+          />
+          <label for="trueField">true</label>
+        </div>
+        <div class="shop-edit__input">
+          <input
+            id="falseField"
+            type="checkbox"
+            :checked="shop.is_active === false"
+            @change="handleCheckboxChange(false)"
+          />
+          <label for="falseField">false</label>
+        </div>
+      </UiField>
+    </div>
+
+    <div class="shop-edit__button-save">
+      <button @click="handleSaveChanges">Save Changes</button>
+    </div>
   </div>
 </template>
 
@@ -142,4 +154,41 @@ onMounted(async () => {
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.shop-edit {
+  &__button-back {
+    padding: 20px;
+    background-color: #112121;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    button {
+      background-color: #ffffff;
+      padding: 10px 5px;
+      transition: background-color 0.3s ease;
+      &:hover {
+        background-color: #112121;
+      }
+    }
+  }
+  &__form {
+    margin-bottom: 20px;
+  }
+  &__button-save {
+    button {
+      background-color: #ffffff;
+      padding: 10px 5px;
+      transition: background-color 0.3s ease;
+      &:hover {
+        background-color: #112121;
+      }
+    }
+  }
+  &__input {
+    margin-bottom: 10px;
+    input {
+      margin-right: 15px;
+    }
+  }
+}
+</style>

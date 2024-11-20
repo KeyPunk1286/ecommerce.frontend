@@ -107,4 +107,14 @@ const handleEditUser = (event) => {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.table-content {
+  &__left-side {
+    margin-bottom: 20px;
+  }
+  &__right-side {
+    display: flex;
+    justify-content: center;
+  }
+}
+</style>

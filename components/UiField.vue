@@ -1,8 +1,8 @@
 <template>
   <div class="ui-field">
-    <label>{{ props.label }}</label>
+    <label class="ui-field__label">{{ props.label }}</label>
     <slot />
-    <div>
+    <div class="ui-field__error-message">
       <ul>
         <li v-for="error in errorsFromData.errors" :key="error">{{ error }}</li>
       </ul>
@@ -25,11 +25,17 @@ const props = defineProps({
 
 <style scoped lang="scss">
 .ui-field {
-  label {
+  &__label {
     display: block;
     font-size: 13px;
     font-weight: 700;
     margin-bottom: 5px;
+  }
+  &__error-message {
+    color: red;
+    ul {
+      list-style: none;
+    }
   }
 }
 </style>

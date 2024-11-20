@@ -1,7 +1,9 @@
 <template>
   <div class="shop-table">
     <div class="shop-table__panel-top">
-      <UiButton @click="handleClickGoBack"><--- Go Back</UiButton>
+      <UiButton @click="handleClickGoBack"
+        ><i class="fa-solid fa-backward"></i> Back</UiButton
+      >
     </div>
     <div class="shop-table__panel-main">
       <UiField
@@ -29,7 +31,9 @@
         />
       </UiField>
     </div>
-    <div><button @click="handleSubmitNewShop">ADD NEW SHOP</button></div>
+    <div class="shop-table__button-save">
+      <button @click="handleSubmitNewShop">ADD NEW SHOP</button>
+    </div>
   </div>
 </template>
 
@@ -111,12 +115,39 @@ const handleClickGoBack = (event) => emit("clickGoBack", event);
 </script>
 
 <style lang="scss" scoped>
-.user-table {
+.shop-table {
   &__panel-top {
     padding: 20px;
     background-color: #112121;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
+    margin-bottom: 20px;
+    button {
+      background-color: #ffffff;
+      padding: 10px 5px;
+      transition: background-color 0.3s ease;
+      &:hover {
+        background-color: #112121;
+      }
+    }
+  }
+  &__panel-main {
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+    margin-bottom: 20px;
+  }
+  &__button-save {
+    display: flex;
+    justify-content: center;
+    button {
+      background-color: #ffffff;
+      padding: 10px 5px;
+      transition: background-color 0.3s ease;
+      &:hover {
+        background-color: #112121;
+      }
+    }
   }
 }
 </style>
