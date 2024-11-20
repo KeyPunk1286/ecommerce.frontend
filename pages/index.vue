@@ -10,7 +10,12 @@ definePageMeta({
   middleware: "auth",
 });
 
-const pageName = ref("Home");
+const pageName = ref("Table");
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.title-page {
+  text-align: center;
+  margin-bottom: 40px;
+}
+</style>

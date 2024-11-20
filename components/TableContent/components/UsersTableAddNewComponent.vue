@@ -2,10 +2,11 @@
   <div class="user-table">
     <div v-if="isLoading">Loading...</div>
     <div v-else>
-      <div class="user-table__panel-top">
-        <UiButton @click="handleClickGoBack"><--- Go Back</UiButton>
+      <div class="user-table__button-back">
+        <UiButton @click="handleClickGoBack"
+          ><i class="fa-solid fa-backward"></i> Back</UiButton
+        >
       </div>
-
       <div class="user-table__panel-main">
         <UiField label="Email" :errorsFromData="errorsFromNewUser.email">
           <UiInput
@@ -17,7 +18,6 @@
             @blur="handleBlurEmail"
           />
         </UiField>
-
         <UiField
           label="First name"
           :errorsFromData="errorsFromNewUser.firstname"
@@ -31,7 +31,6 @@
             @blur="handleBlurFirstname"
           />
         </UiField>
-
         <UiField
           label="Second name"
           :errorsFromData="errorsFromNewUser.secondname"
@@ -45,7 +44,6 @@
             @blur="handleBlurSecondname"
           />
         </UiField>
-
         <UiField label="Last name" :errorsFromData="errorsFromNewUser.lastname">
           <UiInput
             type="text"
@@ -56,7 +54,6 @@
             @blur="handleBlurLastname"
           />
         </UiField>
-
         <UiField label="Password" :errorsFromData="errorsFromNewUser.password">
           <UiInput
             type="text"
@@ -67,7 +64,6 @@
             @blur="handleBlurPassword"
           />
         </UiField>
-
         <UiField
           label="re-enter your password"
           :errorsFromData="errorsFromNewUser.rePassword"
@@ -81,8 +77,9 @@
             @blur="handleBlurRePassword"
           />
         </UiField>
-
-        <div><button @click="handleSubmitNewUser">Save</button></div>
+      </div>
+      <div class="user-table__button-save">
+        <button @click="handleSubmitNewUser">Save</button>
       </div>
     </div>
   </div>
@@ -200,7 +197,7 @@ const handleSubmitNewUser = async () => {
   if (isNewUserFormValid(errorsFromNewUser)) {
     try {
       const POST_DATA = {
-        email: "dataNewUser.email",
+        email: dataNewUser.email,
         firstname: dataNewUser.firstname,
         secondname: dataNewUser.secondname,
         lastname: dataNewUser.lastname,
@@ -231,11 +228,19 @@ const handleSubmitNewUser = async () => {
 
 <style lang="scss" scoped>
 .user-table {
-  &__panel-top {
+  &__button-back {
     padding: 20px;
     background-color: #112121;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
+    button {
+      background-color: #ffffff;
+      padding: 10px 5px;
+      transition: background-color 0.3s ease;
+      &:hover {
+        background-color: #112121;
+      }
+    }
   }
 
   &__panel-main {
@@ -244,14 +249,20 @@ const handleSubmitNewUser = async () => {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    row-gap: 20px;
   }
 
-  &__panel-bottom {
-    padding: 20px;
+  &__button-save {
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    align-items: center;
+    button {
+      background-color: #ffffff;
+      padding: 10px 5px;
+      transition: background-color 0.3s ease;
+      &:hover {
+        background-color: #112121;
+      }
+    }
   }
 }
 </style>

@@ -1,47 +1,59 @@
 <template>
   <div class="customer-edit">
-    <div><button @click="handleClickGoBack"><---Go back</button></div>
-    <UiField label="title" :errorsFromData="errorsFromNewCustomer.title">
-      <UiInput
-        type="text"
-        placeholder="Enter title customer"
-        :value="customer.title"
-        @input="handleInputTitle"
-        @focus="handleFocusTitle"
-        @blur="handleBlurTitle"
-      />
-    </UiField>
-    <UiField label="user_id" :errorsFromData="errorsFromNewCustomer.user_id">
-      <UiInput
-        type="text"
-        placeholder="Enter user_id"
-        :value="customer.user_id"
-        @input="handleInputUserId"
-        @focus="handleFocusUserId"
-        @blur="handleBlurUserId"
-      />
-    </UiField>
-    <UiField label="Status" :errorsFromData="errorsFromNewCustomer.status">
-      <div>
-        <input
-          id="statusActive"
-          type="checkbox"
-          :checked="customer.status === 'active'"
-          @change="handleCheckboxChange('active')"
+    <div class="customer-edit__button-back">
+      <button @click="handleClickGoBack">
+        <i class="fa-solid fa-backward"></i> Back
+      </button>
+    </div>
+    <div class="customer-edit__form">
+      <UiField label="title" :errorsFromData="errorsFromNewCustomer.title">
+        <UiInput
+          type="text"
+          placeholder="Enter title customer"
+          :value="customer.title"
+          @input="handleInputTitle"
+          @focus="handleFocusTitle"
+          @blur="handleBlurTitle"
         />
-        <label for="statusActive">active</label>
-      </div>
-      <div>
-        <input
-          id="statusInactive"
-          type="checkbox"
-          :checked="customer.status === 'inactive'"
-          @change="handleCheckboxChange('inactive')"
+      </UiField>
+    </div>
+    <div class="customer-edit__form">
+      <UiField label="user_id" :errorsFromData="errorsFromNewCustomer.user_id">
+        <UiInput
+          type="text"
+          placeholder="Enter user_id"
+          :value="customer.user_id"
+          @input="handleInputUserId"
+          @focus="handleFocusUserId"
+          @blur="handleBlurUserId"
         />
-        <label for="statusInactive">inactive</label>
-      </div>
-    </UiField>
-    <div><button @click="handleSaveChanges">Save Changes</button></div>
+      </UiField>
+    </div>
+    <div class="customer-edit__form">
+      <UiField label="Status" :errorsFromData="errorsFromNewCustomer.status">
+        <div class="customer-edit__input">
+          <input
+            id="statusActive"
+            type="checkbox"
+            :checked="customer.status === 'active'"
+            @change="handleCheckboxChange('active')"
+          />
+          <label for="statusActive">active</label>
+        </div>
+        <div class="customer-edit__input">
+          <input
+            id="statusInactive"
+            type="checkbox"
+            :checked="customer.status === 'inactive'"
+            @change="handleCheckboxChange('inactive')"
+          />
+          <label for="statusInactive">inactive</label>
+        </div>
+      </UiField>
+    </div>
+    <div class="customer-edit__button-save">
+      <button @click="handleSaveChanges">Save Changes</button>
+    </div>
   </div>
 </template>
 
@@ -136,4 +148,41 @@ onMounted(async () => {
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.customer-edit {
+  &__button-back {
+    padding: 20px;
+    background-color: #112121;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    button {
+      background-color: #ffffff;
+      padding: 10px 5px;
+      transition: background-color 0.3s ease;
+      &:hover {
+        background-color: #112121;
+      }
+    }
+  }
+  &__form {
+    margin-bottom: 20px;
+  }
+  &__input {
+    margin-bottom: 10px;
+    input {
+      margin-right: 15px;
+    }
+  }
+  &__button-save {
+    button {
+      background-color: #ffffff;
+      padding: 10px 5px;
+      transition: background-color 0.3s ease;
+      &:hover {
+        background-color: #112121;
+      }
+    }
+  }
+}
+</style>

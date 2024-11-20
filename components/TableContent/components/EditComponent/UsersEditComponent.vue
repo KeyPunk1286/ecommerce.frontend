@@ -1,9 +1,11 @@
 <template>
   <div class="user-edit">
-    <div>
-      <button @click="handleClickGoBack"><--- clickGoBack</button>
+    <div class="user-edit__button-back">
+      <button @click="handleClickGoBack">
+        <i class="fa-solid fa-backward"></i> Back
+      </button>
     </div>
-    <div>
+    <div class="user-edit__form">
       <UiField label="Email" :errorsFromData="errorsFromNewUser.email">
         <UiInput
           type="text"
@@ -15,7 +17,7 @@
         />
       </UiField>
     </div>
-    <div>
+    <div class="user-edit__form">
       <UiField label="Firstname" :errorsFromData="errorsFromNewUser.firstname">
         <UiInput
           type="text"
@@ -27,7 +29,7 @@
         />
       </UiField>
     </div>
-    <div>
+    <div class="user-edit__form">
       <UiField
         label="Secondname"
         :errorsFromData="errorsFromNewUser.secondname"
@@ -42,7 +44,7 @@
         />
       </UiField>
     </div>
-    <div>
+    <div class="user-edit__form">
       <UiField label="lastname" :errorsFromData="errorsFromNewUser.lastname">
         <UiInput
           type="text"
@@ -54,7 +56,9 @@
         />
       </UiField>
     </div>
-    <div><button @click="handleSaveChanges">Save Changes</button></div>
+    <div class="user-edit__button-save">
+      <button @click="handleSaveChanges">Save Changes</button>
+    </div>
   </div>
 </template>
 
@@ -170,4 +174,35 @@ onMounted(async () => {
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.user-edit {
+  &__button-back {
+    padding: 20px;
+    background-color: #112121;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    button {
+      background-color: #ffffff;
+      padding: 10px 5px;
+      transition: background-color 0.3s ease;
+      &:hover {
+        background-color: #112121;
+      }
+    }
+  }
+  &__form {
+    margin-bottom: 20px;
+  }
+  &__button-save {
+    button {
+      background-color: #ffffff;
+      padding: 10px 5px;
+      transition: background-color 0.3s ease;
+      &:hover {
+        background-color: #112121;
+      }
+    }
+  }
+}
+</style>

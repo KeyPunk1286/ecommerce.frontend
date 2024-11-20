@@ -10,13 +10,14 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.7.1",
     "@pinia/nuxt": "^0.5.5",
     "axios": "^1.7.7",
-    "nuxt": "^3.12.4",
-    "pinia": "^2.2.4",
-    "vue": "latest"
+    "nuxt": "^3.14.1592",
+    "pinia": "^2.2.6",
+    "vue": "^3.5.13"
   },
   "devDependencies": {
-    "sass": "^1.78.0"
+    "sass": "^1.81.0"
   }
 }
