@@ -1,5 +1,5 @@
 <template>
-  <div class="table-content__parent">
+  <div class="table-content">
     <div class="table-content__left-side">
       <TableNameList
         :items="tableListObject"
@@ -109,12 +109,17 @@ const handleEditUser = (event) => {
 
 <style lang="scss" scoped>
 .table-content {
+  display: flex;
   &__left-side {
+    background-color: #112121;
+    flex: 1 1 auto;
+    max-width: 200px;
     margin-bottom: 20px;
   }
   &__right-side {
     display: flex;
     justify-content: center;
+    flex-grow: 1;
   }
 }
 </style>

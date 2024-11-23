@@ -1,5 +1,5 @@
 <template>
-  <div class="title-page">{{ pageName }} page</div>
+  <!-- <div class="title-page">{{ pageName }} page</div> -->
   <div><TableContent /></div>
 </template>
 
@@ -15,7 +15,9 @@ const pageName = ref("Table");
 
 <style scoped lang="scss">
 .title-page {
+  font-size: 25px;
   text-align: center;
-  margin-bottom: 40px;
+  padding: 20px 0 20px;
+  // margin-bottom: 40px;
 }
 </style>
