@@ -4,7 +4,7 @@ export const isCustomerIdValid = (value, errorData) => {
   errorData.isDirty = true;
   errorData.errors = [];
 
-  if (value.length < 1) {
+  if (value === undefined || value === "") {
     errorData.errors.push("Field customer_id is required!");
     return false;
   }
