@@ -5,21 +5,7 @@
         ><i class="fa-solid fa-backward"></i> Back</UiButton
       >
     </div>
-    <div class="shop-table__panel-main">
-      <UiField
-        label="customer_id"
-        :errorsFromData="errorsFromNewShop.customer_id"
-      >
-        <UiInput
-          type="text"
-          placeholder="Enter customer_id"
-          :value="dataNewShop.customer_id"
-          @input="handleInputCustomerId"
-          @focus="handleFocusCustomerId"
-          @blur="handleBlurCustomerID"
-        />
-      </UiField>
-
+    <div class="shop-table__panel-main panel-main">
       <UiField label="Title shop" :errorsFromData="errorsFromNewShop.title">
         <UiInput
           type="text"
@@ -30,6 +16,27 @@
           @blur="handleBlurTitle"
         />
       </UiField>
+
+      <UiField
+        label="customer_id"
+        :errorsFromData="errorsFromNewShop.customer_id"
+      >
+        <select
+          class="panel-main__select"
+          v-model="dataNewShop.customer_id"
+          @change="handleSelectCustomerId"
+          @focus="handleFocusCustomerId"
+          @blur="handleBlurCustomerID"
+        >
+          <option
+            v-for="customer in allCustomers"
+            :key="customer.id"
+            :value="customer.id"
+          >
+            {{ customer.id }}
+          </option>
+        </select>
+      </UiField>
     </div>
     <div class="shop-table__button-save">
       <button @click="handleSubmitNewShop">ADD NEW SHOP</button>
@@ -39,7 +46,7 @@
 
 <script setup>
 import axios from "axios";
-// import { ref, onMounted, reactive } from "vue";
+import { ref, onMounted, reactive } from "vue";
 
 import { dataNewShop, errorsFromNewShop } from "../composables/data.js";
 import {
@@ -49,23 +56,10 @@ import {
   isNewShopFormValid,
 } from "../composables/validationForNewShop.js";
 
-//customer_id =====================================================
-const handleInputCustomerId = (event) => {
-  const inputValue = event.target.value;
+//===== click go back ================================================
+const emit = defineEmits(["clickGoBack"]);
+const handleClickGoBack = (event) => emit("clickGoBack", event);
 
-  if (inputValue === "" || isNaN(Number(inputValue))) {
-    dataNewShop.customer_id = inputValue;
-  } else {
-    dataNewShop.customer_id = parseInt(inputValue, 10);
-  }
-  isCustomerIdValid(dataNewShop.customer_id, errorsFromNewShop.customer_id);
-};
-const handleFocusCustomerId = () => {
-  isCustomerIdValid(dataNewShop.customer_id, errorsFromNewShop.customer_id);
-};
-const handleBlurCustomerID = () => {
-  isCustomerIdValid(dataNewShop.customer_id, errorsFromNewShop.customer_id);
-};
 //title=============================================================
 const handleInputTitle = (event) => {
   dataNewShop.title = event.target.value;
@@ -77,6 +71,27 @@ const handleFocusTitle = () => {
 const handleBlurTitle = () => {
   isTitleValid(dataNewShop.title, errorsFromNewShop.title);
 };
+
+//= select customer_id =================================================
+const allCustomers = reactive([]);
+const getAllCustomers = async () => {
+  try {
+    const response = await axios.get("http://localhost:8888/customers/all");
+    allCustomers.splice(0, allCustomers.length, ...response.data);
+  } catch (error) {
+    console.error("Error fetching customers:", error);
+  }
+};
+const handleSelectCustomerId = () => {
+  isCustomerIdValid(dataNewShop.customer_id, errorsFromNewShop.customer_id);
+};
+const handleFocusCustomerId = () => {
+  isCustomerIdValid(dataNewShop.customer_id, errorsFromNewShop.customer_id);
+};
+const handleBlurCustomerID = () => {
+  isCustomerIdValid(dataNewShop.customer_id, errorsFromNewShop.customer_id);
+};
+//= select ================================================================
 
 // submit new shop ==================================================
 const doRegisterNewShop = async (data = {}) => {
@@ -110,8 +125,9 @@ const handleSubmitNewShop = async () => {
   }
 };
 
-const emit = defineEmits(["clickGoBack"]);
-const handleClickGoBack = (event) => emit("clickGoBack", event);
+onMounted(async () => {
+  await getAllCustomers();
+});
 </script>
 
 <style lang="scss" scoped>
@@ -147,6 +163,13 @@ const handleClickGoBack = (event) => emit("clickGoBack", event);
       &:hover {
         background-color: #112121;
       }
+    }
+  }
+  .panel-main {
+    &__select {
+      padding: 5px;
+      min-width: 100px;
+      outline: none;
     }
   }
 }
