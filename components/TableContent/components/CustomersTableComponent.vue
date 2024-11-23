@@ -8,6 +8,7 @@
       <table class="customer-content__table">
         <thead>
           <tr>
+            <th>id</th>
             <th>title</th>
             <th>status</th>
             <th>created_at</th>
@@ -16,6 +17,7 @@
         </thead>
         <tbody>
           <tr v-for="row in dataTable" :key="row.id">
+            <td>{{ row.id }}</td>
             <td>{{ row.title }}</td>
             <td>{{ row.status }}</td>
             <td>{{ row.created_at }}</td>

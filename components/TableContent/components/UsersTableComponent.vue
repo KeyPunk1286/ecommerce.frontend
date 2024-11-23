@@ -8,6 +8,7 @@
       <table class="user-content__table">
         <thead>
           <tr>
+            <th>id</th>
             <th>Email</th>
             <th>First name</th>
             <th>Second name</th>
@@ -18,6 +19,7 @@
         </thead>
         <tbody>
           <tr v-for="row in dataTable" :key="row.id">
+            <td>{{ row.id }}</td>
             <td>{{ row.email }}</td>
             <td>{{ row.firstname }}</td>
             <td>{{ row.secondname }}</td>
