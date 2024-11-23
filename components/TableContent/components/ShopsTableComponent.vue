@@ -8,6 +8,7 @@
       <table class="shop-content__table">
         <thead>
           <tr>
+            <th>id</th>
             <th>title</th>
             <th>is_active</th>
             <th>created_at</th>
@@ -16,6 +17,7 @@
         </thead>
         <tbody>
           <tr v-for="row in dataTable" :key="row.id">
+            <td>{{ row.id }}</td>
             <td>{{ row.title }}</td>
             <td>{{ row.is_active }}</td>
             <td>{{ row.created_at }}</td>
