@@ -33,20 +33,23 @@ const handleClick = (index) => {
 <style lang="scss" scoped>
 .table-list {
   list-style: none;
+
   &__item {
-    margin-bottom: 15px;
+    background-color: #224141;
+    padding: 20px;
     cursor: pointer;
-    transition: color 0.3s ease;
-    width: max-content;
+    transition: background-color 0.3s ease;
+    // width: max-content;
 
     &:last-child {
       margin-bottom: 0;
     }
     &:hover {
-      color: rgb(126, 125, 124);
+      background-color: #1c3535;
+      // color: rgb(126, 125, 124);
     }
     &--active {
-      color: rgb(73, 73, 73);
+      background-color: #1c3535;
     }
   }
 }
