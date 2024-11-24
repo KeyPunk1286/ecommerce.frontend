@@ -1,11 +1,9 @@
 <template>
   <div class="user-edit">
-    <div class="user-edit__button-back">
-      <button @click="handleClickGoBack">
-        <i class="fa-solid fa-backward"></i> Back
-      </button>
+    <div class="user-edit__panel-title">
+      Edit user: <span>{{ user.email }}</span>
     </div>
-    <div class="user-edit__form">
+    <div class="user-edit__panel-main">
       <UiField label="Email" :errorsFromData="errorsFromNewUser.email">
         <UiInput
           type="text"
@@ -16,8 +14,6 @@
           @blur="handleBlurEmail"
         />
       </UiField>
-    </div>
-    <div class="user-edit__form">
       <UiField label="Firstname" :errorsFromData="errorsFromNewUser.firstname">
         <UiInput
           type="text"
@@ -28,8 +24,6 @@
           @blur="handleBlurFirstname"
         />
       </UiField>
-    </div>
-    <div class="user-edit__form">
       <UiField
         label="Secondname"
         :errorsFromData="errorsFromNewUser.secondname"
@@ -43,8 +37,6 @@
           @blur="handleBlurSecondname"
         />
       </UiField>
-    </div>
-    <div class="user-edit__form">
       <UiField label="lastname" :errorsFromData="errorsFromNewUser.lastname">
         <UiInput
           type="text"
@@ -56,8 +48,15 @@
         />
       </UiField>
     </div>
-    <div class="user-edit__button-save">
-      <button @click="handleSaveChanges">Save Changes</button>
+
+    <div class="user-edit__button-panel button-panel">
+      <button class="button-panel__click-back" @click="handleClickGoBack">
+        <i class="fa-solid fa-backward"></i> Back
+      </button>
+      <button class="button-panel__click-save" @click="handleSaveChanges">
+        <i class="fa-regular fa-floppy-disk"></i>
+        Save
+      </button>
     </div>
   </div>
 </template>
@@ -176,32 +175,45 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .user-edit {
-  &__button-back {
-    padding: 20px;
+  &__panel-title {
+    text-align: center;
+    font-size: 30px;
+    padding: 20px 10px;
     background-color: #112121;
+    margin-bottom: 40px;
+  }
+  &__panel-main {
+    max-width: 500px;
     display: flex;
-    justify-content: center;
-    margin-bottom: 30px;
-    button {
-      background-color: #ffffff;
-      padding: 10px 5px;
-      transition: background-color 0.3s ease;
-      &:hover {
-        background-color: #112121;
-      }
+    flex-wrap: wrap;
+    justify-content: space-between;
+    row-gap: 20px;
+  }
+  &__button-panel {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0;
+  }
+}
+.button-panel {
+  &__click-back {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    background-color: #ffffff;
+    transition: background-color 0.3s ease;
+    &:hover {
+      background-color: #112121;
     }
   }
-  &__form {
-    margin-bottom: 20px;
-  }
-  &__button-save {
-    button {
-      background-color: #ffffff;
-      padding: 10px 5px;
-      transition: background-color 0.3s ease;
-      &:hover {
-        background-color: #112121;
-      }
+  &__click-save {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    background-color: #ffffff;
+    transition: background-color 0.3s ease;
+    &:hover {
+      background-color: #112121;
     }
   }
 }

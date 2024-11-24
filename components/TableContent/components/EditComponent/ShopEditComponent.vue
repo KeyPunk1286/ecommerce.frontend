@@ -1,27 +1,9 @@
 <template>
   <div class="shop-edit">
-    <div class="shop-edit__button-back">
-      <button @click="handleClickGoBack">
-        <i class="fa-solid fa-backward"></i> Back
-      </button>
+    <div class="shop-edit__panel-title">
+      Edit shop: <span>{{ shop.title }}</span>
     </div>
-    <div class="shop-edit__form">
-      <UiField
-        label="Customer_id"
-        :errorsFromData="errorsFromNewShop.customer_id"
-      >
-        <UiInput
-          type="text"
-          placeholder="Enter customer_id"
-          :value="shop.customer_id"
-          @input="handleInputCustomerId"
-          @focus="handleFocusCustomerId"
-          @blur="handleBlurCustomerId"
-        />
-      </UiField>
-    </div>
-
-    <div class="shop-edit__form">
+    <div class="shop-edit__panel-main panel-main">
       <UiField label="Title shop" :errorsFromData="errorsFromNewShop.title">
         <UiInput
           type="text"
@@ -32,11 +14,31 @@
           @blur="handleBlurTitleShop"
         />
       </UiField>
-    </div>
 
-    <div class="shop-edit__form">
+      <UiField
+        label="Customer_id"
+        :errorsFromData="errorsFromNewShop.customer_id"
+      >
+        <select
+          class="panel-main__select"
+          :value="shop.customer_id"
+          @change="handleCustomerIdChange"
+          @focus="handleFocusCustomerId"
+          @blur="handleBlurCustomerId"
+        >
+          <option value="">select customer_id</option>
+          <option
+            v-for="customer in allCustomerId"
+            :key="customer.id"
+            :value="customer.id"
+          >
+            {{ customer.id }} - {{ customer.title }}
+          </option>
+        </select>
+      </UiField>
+
       <UiField label="is_active field">
-        <div class="shop-edit__input">
+        <div class="panel-main__input">
           <input
             id="trueField"
             type="checkbox"
@@ -45,7 +47,7 @@
           />
           <label for="trueField">true</label>
         </div>
-        <div class="shop-edit__input">
+        <div class="panel-main__input">
           <input
             id="falseField"
             type="checkbox"
@@ -57,15 +59,20 @@
       </UiField>
     </div>
 
-    <div class="shop-edit__button-save">
-      <button @click="handleSaveChanges">Save Changes</button>
+    <div class="shop-edit__button-save button-save">
+      <button class="button-save__click-back" @click="handleClickGoBack">
+        <i class="fa-solid fa-backward"></i> Back
+      </button>
+      <button class="button-save__click-save" @click="handleSaveChanges">
+        <i class="fa-regular fa-floppy-disk"></i> Save
+      </button>
     </div>
   </div>
 </template>
 
 <script setup>
 import axios from "axios";
-import { ref, onMounted } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { errorsFromNewShop } from "@/components/TableContent/composables/data.js";
 import {
   isCustomerIdValid,
@@ -85,6 +92,15 @@ const props = defineProps({
 });
 
 const shop = ref({});
+const allCustomerId = reactive([]);
+const getAllCustomerId = async () => {
+  try {
+    const response = await axios.get("http://localhost:8888/customers/all");
+    allCustomerId.splice(0, allCustomerId.length, ...response?.data);
+  } catch (error) {
+    console.error("Error fetching customer_id data:", error);
+  }
+};
 const loadShopById = async () => {
   try {
     const shopData = await axios.get(
@@ -97,7 +113,7 @@ const loadShopById = async () => {
 };
 
 //customer_id field ========================================
-const handleInputCustomerId = (event) => {
+const handleCustomerIdChange = (event) => {
   shop.value.customer_id = event.target.value;
   isCustomerIdValid(shop.value.customer_id, errorsFromNewShop.customer_id);
 };
@@ -108,6 +124,7 @@ const handleBlurCustomerId = () => {
   isCustomerIdValid(shop.value.customer_id, errorsFromNewShop.customer_id);
 };
 //title shop id ============================================
+
 const handleInputTitleShop = (event) => {
   shop.value.title = event.target.value;
   isTitleValid(shop.value.title, errorsFromNewShop.title);
@@ -151,43 +168,61 @@ const handleSaveChanges = async () => {
 };
 onMounted(async () => {
   await loadShopById();
+  await getAllCustomerId();
 });
 </script>
 
 <style lang="scss" scoped>
 .shop-edit {
-  &__button-back {
-    padding: 20px;
+  &__panel-title {
+    text-align: center;
+    font-size: 30px;
+    padding: 20px 10px;
     background-color: #112121;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 30px;
-    button {
-      background-color: #ffffff;
-      padding: 10px 5px;
-      transition: background-color 0.3s ease;
-      &:hover {
-        background-color: #112121;
-      }
-    }
+    margin-bottom: 40px;
   }
-  &__form {
-    margin-bottom: 20px;
+  &__panel-main {
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
   }
   &__button-save {
-    button {
-      background-color: #ffffff;
-      padding: 10px 5px;
-      transition: background-color 0.3s ease;
-      &:hover {
-        background-color: #112121;
-      }
-    }
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0;
+  }
+}
+.panel-main {
+  &__select {
+    padding: 5px;
+    min-width: 100px;
+    outline: none;
   }
   &__input {
-    margin-bottom: 10px;
     input {
-      margin-right: 15px;
+      margin-right: 10px;
+    }
+  }
+}
+.button-save {
+  &__click-back {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    background-color: #ffffff;
+    transition: background-color 0.3s ease;
+    &:hover {
+      background-color: #112121;
+    }
+  }
+  &__click-save {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    background-color: #ffffff;
+    transition: background-color 0.3s ease;
+    &:hover {
+      background-color: #112121;
     }
   }
 }

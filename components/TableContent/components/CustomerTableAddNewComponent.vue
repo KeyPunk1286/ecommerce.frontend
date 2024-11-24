@@ -1,10 +1,6 @@
 <template>
   <div class="customer-table">
-    <div class="customer-table__panel-top">
-      <UiButton @click="handleClickGoBack"
-        ><i class="fa-solid fa-backward"></i> Back</UiButton
-      >
-    </div>
+    <div class="customer-table__panel-title">Add new customer</div>
     <div class="customer-table__panel-main panel-main">
       <UiField label="title" :errorsFromData="errorsFromNewCustomer.title">
         <UiInput
@@ -16,16 +12,22 @@
           @blur="handleBlurTitle"
         />
       </UiField>
-      <UiField label="user_id" :errorsFromData="errorsFromNewCustomer.user_id">
-        <UiInput
-          type="text"
-          placeholder="Enter user_ID"
-          :value="dataNewCustomer.user_id"
-          @input="handleInputUserID"
+
+      <UiField label="user_id">
+        <select
+          class="panel-main__select"
+          v-model="dataNewCustomer.user_id"
+          @change="handleSelectUserId"
           @focus="handleFocusUserID"
           @blur="handleBlurUserID"
-        />
+        >
+          <option value="">select user_id</option>
+          <option v-for="user in allUserId" :key="user.id" :value="user.id">
+            {{ user.id }}
+          </option>
+        </select>
       </UiField>
+
       <UiField
         class="panel-main__checkbox"
         label="Status"
@@ -37,30 +39,26 @@
             type="checkbox"
             id="activeInput"
             :checked="dataNewCustomer.status === 'active'"
-            @change="handleCheckboxChange('active')"
+            @change="handleCheckboxChange"
           />
           <label for="activeInput">active?</label>
         </div>
-        <div>
-          <input
-            type="checkbox"
-            id="inactiveInput"
-            :checked="dataNewCustomer.status === 'inactive'"
-            @change="handleCheckboxChange('inactive')"
-          />
-          <label for="inactiveInput">inactive?</label>
-        </div>
       </UiField>
     </div>
-    <div class="customer-table__button-save">
-      <button @click="handleSubmitNewCustomer">ADD NEW CUSTOMER</button>
+    <div class="customer-table__button-panel button-panel">
+      <UiButton @click="handleClickGoBack"
+        ><i class="fa-solid fa-backward"></i> Back</UiButton
+      >
+      <button class="button-panel__save" @click="handleSubmitNewCustomer">
+        <i class="fa-regular fa-floppy-disk"></i> Add
+      </button>
     </div>
   </div>
 </template>
 
 <script setup>
 import axios from "axios";
-import { ref } from "vue";
+import { reactive, onMounted } from "vue";
 
 import { dataNewCustomer, errorsFromNewCustomer } from "../composables/data.js";
 import {
@@ -70,6 +68,9 @@ import {
   doValidateErrorForm,
   isNewCustomerFormValid,
 } from "../composables/validationForNewCustomer.js";
+
+const emit = defineEmits(["clickGoBack"]);
+const handleClickGoBack = (event) => emit("clickGoBack", event);
 
 // let isLoading = ref(true);
 
@@ -86,11 +87,16 @@ const handleBlurTitle = () => {
 };
 
 //user_id field ==================================================
-const handleInputUserID = (event) => {
-  const inputValue = event.target.value;
-  if (inputValue === "" || isNaN(Number(inputValue)))
-    dataNewCustomer.user_id = inputValue;
-  else dataNewCustomer.user_id = parseInt(inputValue);
+const allUserId = reactive([]);
+const getAllUserId = async () => {
+  try {
+    const response = await axios.get("http://localhost:8888/users/all");
+    allUserId.splice(0, allUserId.length, ...response.data);
+  } catch (error) {
+    console.error("Error fetching customers:", error);
+  }
+};
+const handleSelectUserId = () => {
   isUserIdValid(dataNewCustomer.user_id, errorsFromNewCustomer.user_id);
 };
 const handleFocusUserID = () => {
@@ -100,9 +106,9 @@ const handleBlurUserID = () => {
   isUserIdValid(dataNewCustomer.user_id, errorsFromNewCustomer.user_id);
 };
 //status field=====================================================
-const handleCheckboxChange = (status) => {
-  if (dataNewCustomer.status === status) dataNewCustomer.status = "";
-  else dataNewCustomer.status = status;
+const handleCheckboxChange = (event) => {
+  dataNewCustomer.status = event.target.checked ? "active" : "inactive";
+
   isStatusVAlid(dataNewCustomer.status, errorsFromNewCustomer.status);
 };
 //submit ============================================================
@@ -139,26 +145,19 @@ const handleSubmitNewCustomer = async () => {
   }
 };
 
-const emit = defineEmits(["clickGoBack"]);
-const handleClickGoBack = (event) => emit("clickGoBack", event);
+onMounted(async () => {
+  await getAllUserId();
+});
 </script>
 
 <style lang="scss" scoped>
 .customer-table {
-  &__panel-top {
-    padding: 20px;
+  &__panel-title {
+    text-align: center;
+    font-size: 30px;
+    padding: 20px 15px;
     background-color: #112121;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-    button {
-      background-color: #ffffff;
-      padding: 10px 5px;
-      transition: background-color 0.3s ease;
-      &:hover {
-        background-color: #112121;
-      }
-    }
+    margin-bottom: 40px;
   }
   &__panel-main {
     display: flex;
@@ -166,18 +165,7 @@ const handleClickGoBack = (event) => emit("clickGoBack", event);
     row-gap: 20px;
     margin-bottom: 20px;
   }
-  &__button-save {
-    display: flex;
-    justify-content: center;
-    button {
-      background-color: #ffffff;
-      padding: 10px 5px;
-      transition: background-color 0.3s ease;
-      &:hover {
-        background-color: #112121;
-      }
-    }
-  }
+
   .panel-main {
     &__checkbox {
       display: flex;
@@ -185,6 +173,26 @@ const handleClickGoBack = (event) => emit("clickGoBack", event);
       row-gap: 10px;
       input {
         margin-right: 5px;
+      }
+    }
+    &__select {
+      padding: 5px;
+      min-width: 100px;
+      outline: none;
+    }
+  }
+  .button-panel {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0;
+    &__save {
+      padding: 10px 20px;
+      border-radius: 5px;
+      border: none;
+      background-color: #ffffff;
+      transition: background-color 0.3s ease;
+      &:hover {
+        background-color: #112121;
       }
     }
   }

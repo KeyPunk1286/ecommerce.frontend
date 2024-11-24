@@ -2,11 +2,7 @@
   <div class="user-table">
     <div v-if="isLoading">Loading...</div>
     <div v-else>
-      <div class="user-table__button-back">
-        <UiButton @click="handleClickGoBack"
-          ><i class="fa-solid fa-backward"></i> Back</UiButton
-        >
-      </div>
+      <div class="user-table__title">add new user</div>
       <div class="user-table__panel-main">
         <UiField label="Email" :errorsFromData="errorsFromNewUser.email">
           <UiInput
@@ -78,8 +74,13 @@
           />
         </UiField>
       </div>
-      <div class="user-table__button-save">
-        <button @click="handleSubmitNewUser">Save</button>
+      <div class="user-table__button-panel button-panel">
+        <UiButton @click="handleClickGoBack"
+          ><i class="fa-solid fa-backward"></i> Back</UiButton
+        >
+        <button class="button-panel__save" @click="handleSubmitNewUser">
+          <i class="fa-regular fa-floppy-disk"></i> Save
+        </button>
       </div>
     </div>
   </div>
@@ -228,40 +229,36 @@ const handleSubmitNewUser = async () => {
 
 <style lang="scss" scoped>
 .user-table {
-  &__button-back {
-    padding: 20px;
+  &__title {
+    text-align: center;
+    font-size: 30px;
+    padding: 20px 0 20px;
     background-color: #112121;
-    display: flex;
-    justify-content: center;
-    button {
-      background-color: #ffffff;
-      padding: 10px 5px;
-      transition: background-color 0.3s ease;
-      &:hover {
-        background-color: #112121;
-      }
-    }
+    margin-bottom: 40px;
   }
-
   &__panel-main {
-    padding: 20px;
+    max-width: 500px;
+    // padding: 20px;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-wrap: wrap;
+    // flex-direction: column;
+    justify-content: space-between;
     align-items: center;
     row-gap: 20px;
   }
-
-  &__button-save {
-    display: flex;
-    justify-content: center;
-    button {
-      background-color: #ffffff;
-      padding: 10px 5px;
-      transition: background-color 0.3s ease;
-      &:hover {
-        background-color: #112121;
-      }
+}
+.button-panel {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 0;
+  &__save {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    background-color: #ffffff;
+    transition: background-color 0.3s ease;
+    &:hover {
+      background-color: #112121;
     }
   }
 }
