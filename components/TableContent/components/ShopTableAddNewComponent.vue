@@ -1,10 +1,6 @@
 <template>
   <div class="shop-table">
-    <div class="shop-table__panel-top">
-      <UiButton @click="handleClickGoBack"
-        ><i class="fa-solid fa-backward"></i> Back</UiButton
-      >
-    </div>
+    <div class="shop-table__panel-title">Add new shop</div>
     <div class="shop-table__panel-main panel-main">
       <UiField label="Title shop" :errorsFromData="errorsFromNewShop.title">
         <UiInput
@@ -28,6 +24,7 @@
           @focus="handleFocusCustomerId"
           @blur="handleBlurCustomerID"
         >
+          <option value="">select customer_id</option>
           <option
             v-for="customer in allCustomers"
             :key="customer.id"
@@ -38,8 +35,13 @@
         </select>
       </UiField>
     </div>
-    <div class="shop-table__button-save">
-      <button @click="handleSubmitNewShop">ADD NEW SHOP</button>
+    <div class="shop-table__button-panel button-panel">
+      <UiButton @click="handleClickGoBack"
+        ><i class="fa-solid fa-backward"></i> Back</UiButton
+      >
+      <button class="button-panel__save" @click="handleSubmitNewShop">
+        <i class="fa-regular fa-floppy-disk"></i> Add
+      </button>
     </div>
   </div>
 </template>
@@ -132,20 +134,12 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .shop-table {
-  &__panel-top {
-    padding: 20px;
+  &__panel-title {
+    text-align: center;
+    font-size: 30px;
+    padding: 20px 0 20px;
     background-color: #112121;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-    button {
-      background-color: #ffffff;
-      padding: 10px 5px;
-      transition: background-color 0.3s ease;
-      &:hover {
-        background-color: #112121;
-      }
-    }
+    margin-bottom: 40px;
   }
   &__panel-main {
     display: flex;
@@ -153,23 +147,27 @@ onMounted(async () => {
     row-gap: 20px;
     margin-bottom: 20px;
   }
-  &__button-save {
-    display: flex;
-    justify-content: center;
-    button {
-      background-color: #ffffff;
-      padding: 10px 5px;
-      transition: background-color 0.3s ease;
-      &:hover {
-        background-color: #112121;
-      }
-    }
-  }
+
   .panel-main {
     &__select {
       padding: 5px;
       min-width: 100px;
       outline: none;
+    }
+  }
+  .button-panel {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0;
+    &__save {
+      padding: 10px 20px;
+      border-radius: 5px;
+      border: none;
+      background-color: #ffffff;
+      transition: background-color 0.3s ease;
+      &:hover {
+        background-color: #112121;
+      }
     }
   }
 }

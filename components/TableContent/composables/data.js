@@ -58,7 +58,7 @@ export const errorsFromNewShop = reactive({
 export const dataNewCustomer = reactive({
   title: "",
   user_id: "",
-  status: "",
+  status: "active",
 });
 
 export const errorsFromNewCustomer = reactive({
