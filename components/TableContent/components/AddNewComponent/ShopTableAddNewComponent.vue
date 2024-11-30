@@ -50,13 +50,16 @@
 import axios from "axios";
 import { ref, onMounted, reactive } from "vue";
 
-import { dataNewShop, errorsFromNewShop } from "../composables/data.js";
+import {
+  dataNewShop,
+  errorsFromNewShop,
+} from "@/components/TableContent/composables/data.js";
 import {
   isCustomerIdValid,
   isTitleValid,
   doValidateErrorForm,
   isNewShopFormValid,
-} from "../composables/validationForNewShop.js";
+} from "@/components/TableContent/composables/validationForNewShop.js";
 
 //===== click go back ================================================
 const emit = defineEmits(["clickGoBack"]);

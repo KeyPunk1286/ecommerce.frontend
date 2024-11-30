@@ -75,3 +75,30 @@ export const errorsFromNewCustomer = reactive({
     errors: [],
   },
 });
+
+//data for new Product ========================
+export const dataNewProduct = reactive({
+  title: "",
+  shop_id: "",
+  description: "",
+  price: "",
+});
+
+export const errorsFromNewProduct = reactive({
+  title: {
+    isDirty: false,
+    errors: [],
+  },
+  shop_id: {
+    isDirty: false,
+    errors: [],
+  },
+  description: {
+    isDirty: false,
+    errors: [],
+  },
+  price: {
+    isDirty: false,
+    errors: [],
+  },
+});

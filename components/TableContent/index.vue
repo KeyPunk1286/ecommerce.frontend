@@ -22,14 +22,17 @@
 import { reactive, ref, computed } from "vue";
 import TableNameList from "../TableContent/components/TableNameList.vue";
 import UsersTableComponent from "../TableContent/components/UsersTableComponent.vue";
-import UsersTableAddNewComponent from "../TableContent/components/UsersTableAddNewComponent.vue";
-import ShopsTableComponent from "../TableContent/components/ShopsTableComponent.vue";
-import ShopsTableAddNewComponent from "../TableContent/components/ShopTableAddNewComponent.vue";
-import CustomersTableComponent from "../TableContent/components/CustomersTableComponent.vue";
-import CustomersTableAddNewComponent from "../TableContent/components/CustomerTableAddNewComponent.vue";
+import UsersTableAddNewComponent from "../TableContent/components/AddNewComponent/UsersTableAddNewComponent.vue";
 import UsersEditComponent from "../TableContent/components/EditComponent/UsersEditComponent.vue";
+import ShopsTableComponent from "../TableContent/components/ShopsTableComponent.vue";
+import ShopsTableAddNewComponent from "../TableContent/components/AddNewComponent/ShopTableAddNewComponent.vue";
 import ShopEditComponent from "../TableContent/components/EditComponent/ShopEditComponent.vue";
+import CustomersTableComponent from "../TableContent/components/CustomersTableComponent.vue";
+import CustomersTableAddNewComponent from "../TableContent/components/AddNewComponent/CustomerTableAddNewComponent.vue";
 import CustomersEditComponents from "../TableContent/components/EditComponent/CustomersEditComponents.vue";
+import ProductsTableComponent from "../TableContent/components/ProductsTableComponent.vue";
+import ProductTableAddNewComponent from "../TableContent/components/AddNewComponent/ProductTableAddNewComponent.vue";
+import ProductEditComponent from "../TableContent/components/EditComponent/ProductEditComponent.vue";
 
 const activeTable = ref(0);
 const idSelect = ref(null);
@@ -70,6 +73,18 @@ const tableListObject = reactive([
       active: false,
     },
   },
+  {
+    title: "Products",
+    tableComponent: ProductsTableComponent,
+    addNew: {
+      component: ProductTableAddNewComponent,
+      active: false,
+    },
+    editComponent: {
+      component: ProductEditComponent,
+      active: false,
+    },
+  },
 ]);
 
 const handleChangeTableComponent = (index) => {
@@ -93,7 +108,7 @@ const activeTableComponent = computed(() => {
 });
 
 const handleSwitch = () => {
-  return (tableListObject[activeTable.value].addNew.active = true);
+  tableListObject[activeTable.value].addNew.active = true;
 };
 
 const handleClickGoBack = () => {

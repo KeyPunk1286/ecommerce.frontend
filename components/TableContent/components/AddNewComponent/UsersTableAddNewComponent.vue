@@ -91,7 +91,10 @@ import axios from "axios";
 import { ref } from "vue";
 
 import UiField from "~/components/UiField.vue";
-import { dataNewUser, errorsFromNewUser } from "../composables/data.js";
+import {
+  dataNewUser,
+  errorsFromNewUser,
+} from "@/components/TableContent/composables/data.js";
 import {
   isEmailValid,
   isFirstNameValid,
@@ -101,7 +104,7 @@ import {
   isRePasswordValid,
   doValidateErrorForm,
   isNewUserFormValid,
-} from "../composables/validationForNewUser.js";
+} from "@/components/TableContent/composables/validationForNewUser.js";
 
 let isLoading = ref(false);
 
