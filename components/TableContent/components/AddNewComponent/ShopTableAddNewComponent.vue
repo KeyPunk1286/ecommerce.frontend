@@ -1,47 +1,54 @@
 <template>
   <div class="shop-table">
-    <div class="shop-table__panel-title">Add new shop</div>
-    <div class="shop-table__panel-main panel-main">
-      <UiField label="Title shop" :errorsFromData="errorsFromNewShop.title">
-        <UiInput
-          type="text"
-          placeholder="Enter title shop"
-          :value="dataNewShop.title"
-          @input="handleInputTitle"
-          @focus="handleFocusTitle"
-          @blur="handleBlurTitle"
-        />
-      </UiField>
+    <div v-if="isLoading">Loading...</div>
+    <div v-else>
+      <div class="shop-table__panel-title">Add new shop</div>
+      <div class="shop-table__panel-main panel-main">
+        <UiField label="Title shop" :errorsFromData="errorsFromNewShop.title">
+          <UiInput
+            type="text"
+            placeholder="Enter title shop"
+            :value="dataNewShop.title"
+            @input="handleInput($event, 'title', isTitleValid, 'title')"
+            @focus="handleFocus('title', isTitleValid, 'title')"
+            @blur="handleBlur('title', isTitleValid, 'title')"
+          />
+        </UiField>
 
-      <UiField
-        label="customer_id"
-        :errorsFromData="errorsFromNewShop.customer_id"
-      >
-        <select
-          class="panel-main__select"
-          v-model="dataNewShop.customer_id"
-          @change="handleSelectCustomerId"
-          @focus="handleFocusCustomerId"
-          @blur="handleBlurCustomerID"
+        <UiField
+          label="customer_id"
+          :errorsFromData="errorsFromNewShop.customer_id"
         >
-          <option value="">select customer_id</option>
-          <option
-            v-for="customer in allCustomers"
-            :key="customer.id"
-            :value="customer.id"
+          <select
+            class="panel-main__select"
+            v-model="dataNewShop.customer_id"
+            @change="
+              handleInput(null, 'customer_id', isCustomerIdValid, 'customer_id')
+            "
+            @focus="
+              handleFocus('customer_id', isCustomerIdValid, 'customer_id')
+            "
+            @blur="handleBlur('customer_id', isCustomerIdValid, 'customer_id')"
           >
-            {{ customer.id }}
-          </option>
-        </select>
-      </UiField>
-    </div>
-    <div class="shop-table__button-panel button-panel">
-      <UiButton @click="handleClickGoBack"
-        ><i class="fa-solid fa-backward"></i> Back</UiButton
-      >
-      <button class="button-panel__save" @click="handleSubmitNewShop">
-        <i class="fa-regular fa-floppy-disk"></i> Add
-      </button>
+            <option value="">select customer_id</option>
+            <option
+              v-for="customer in allCustomers"
+              :key="customer.id"
+              :value="customer.id"
+            >
+              {{ customer.id }}
+            </option>
+          </select>
+        </UiField>
+      </div>
+      <div class="shop-table__button-panel button-panel">
+        <UiButton @click="handleClickGoBack"
+          ><i class="fa-solid fa-backward"></i> Back</UiButton
+        >
+        <button class="button-panel__save" @click="handleSubmitNewShop">
+          <i class="fa-regular fa-floppy-disk"></i> Add
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -65,38 +72,37 @@ import {
 const emit = defineEmits(["clickGoBack"]);
 const handleClickGoBack = (event) => emit("clickGoBack", event);
 
-//title=============================================================
-const handleInputTitle = (event) => {
-  dataNewShop.title = event.target.value;
-  isTitleValid(dataNewShop.title, errorsFromNewShop.title);
-};
-const handleFocusTitle = () => {
-  isTitleValid(dataNewShop.title, errorsFromNewShop.title);
-};
-const handleBlurTitle = () => {
-  isTitleValid(dataNewShop.title, errorsFromNewShop.title);
-};
+const isLoading = ref(false);
 
-//= select customer_id =================================================
 const allCustomers = reactive([]);
 const getAllCustomers = async () => {
+  isLoading.value = true;
   try {
     const response = await axios.get("http://localhost:8888/customers/all");
     allCustomers.splice(0, allCustomers.length, ...response.data);
   } catch (error) {
     console.error("Error fetching customers:", error);
+  } finally {
+    isLoading.value = false;
   }
 };
-const handleSelectCustomerId = () => {
-  isCustomerIdValid(dataNewShop.customer_id, errorsFromNewShop.customer_id);
+
+// validate block ===================================================
+const validateField = (dataName, validate, errorFieldName) => {
+  validate(dataNewShop[dataName], errorsFromNewShop[errorFieldName]);
 };
-const handleFocusCustomerId = () => {
-  isCustomerIdValid(dataNewShop.customer_id, errorsFromNewShop.customer_id);
+const handleInput = (event, dataName, validate, errorFieldName) => {
+  if (event && event.target) {
+    dataNewShop[dataName] = event.target.value;
+  }
+  validateField(dataName, validate, errorFieldName);
 };
-const handleBlurCustomerID = () => {
-  isCustomerIdValid(dataNewShop.customer_id, errorsFromNewShop.customer_id);
+const handleFocus = (dataName, validate, errorFieldName) => {
+  validateField(dataName, validate, errorFieldName);
 };
-//= select ================================================================
+const handleBlur = (dataName, validate, errorFieldName) => {
+  validateField(dataName, validate, errorFieldName);
+};
 
 // submit new shop ==================================================
 const doRegisterNewShop = async (data = {}) => {

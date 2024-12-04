@@ -9,9 +9,9 @@
             type="text"
             placeholder="Enter Email"
             :value="dataNewUser.email"
-            @input="handleInputEmail"
-            @focus="handleFocusEmail"
-            @blur="handleBlurEmail"
+            @input="handleInput($event, 'email', isEmailValid, 'email')"
+            @focus="handleFocus('email', isEmailValid, 'email')"
+            @blur="handleBlur('email', isEmailValid, 'email')"
           />
         </UiField>
         <UiField
@@ -22,9 +22,11 @@
             type="text"
             placeholder="Enter First name"
             :value="dataNewUser.firstname"
-            @input="handleImputFirstname"
-            @focus="handleFocusFirstname"
-            @blur="handleBlurFirstname"
+            @input="
+              handleInput($event, 'firstname', isFirstNameValid, 'firstname')
+            "
+            @focus="handleFocus('firstname', isFirstNameValid, 'firstname')"
+            @blur="handleBlur('firstname', isFirstNameValid, 'firstname')"
           />
         </UiField>
         <UiField
@@ -35,9 +37,11 @@
             type="text"
             placeholder="Enter Second name"
             :value="dataNewUser.secondname"
-            @input="handleImputSecondname"
-            @focus="handleFocusSecondname"
-            @blur="handleBlurSecondname"
+            @input="
+              handleInput($event, 'secondname', isSecondnameValid, 'secondname')
+            "
+            @focus="handleFocus('secondname', isSecondnameValid, 'secondname')"
+            @blur="handleBlur('secondname', isSecondnameValid, 'secondname')"
           />
         </UiField>
         <UiField label="Last name" :errorsFromData="errorsFromNewUser.lastname">
@@ -45,9 +49,13 @@
             type="text"
             placeholder="Enter last name"
             :value="dataNewUser.lastname"
-            @input="handleImputLastname"
-            @focus="handleFocusLastname"
-            @blur="handleBlurLastname"
+            @input="
+              handleInput($event, 'lastname', isLastnameValid, 'lastname')
+            "
+            @focus="
+              handleFocusLastname('lastname', isLastnameValid, 'lastname')
+            "
+            @blur="handleBlurLastname('lastname', isLastnameValid, 'lastname')"
           />
         </UiField>
         <UiField label="Password" :errorsFromData="errorsFromNewUser.password">
@@ -55,9 +63,11 @@
             type="text"
             placeholder="Enter password"
             :value="dataNewUser.password"
-            @input="handleImputPassword"
-            @focus="handleFocusPassword"
-            @blur="handleBlurPassword"
+            @input="
+              handleInput($event, 'password', isPasswordValid, 'password')
+            "
+            @focus="handleFocus('password', isPasswordValid, 'password')"
+            @blur="handleBlur('password', isPasswordValid, 'password')"
           />
         </UiField>
         <UiField
@@ -68,9 +78,11 @@
             type="text"
             placeholder="Enter password"
             :value="dataNewUser.rePassword"
-            @input="handleImputRePassword"
-            @focus="handleFocusRePsword"
-            @blur="handleBlurRePassword"
+            @input="
+              handleInput($event, 'rePassword', isRePasswordValid, 'rePassword')
+            "
+            @focus="handleFocus('rePassword', isRePasswordValid, 'rePassword')"
+            @blur="handleBlur('rePassword', isRePasswordValid, 'rePassword')"
           />
         </UiField>
       </div>
@@ -108,83 +120,28 @@ import {
 
 let isLoading = ref(false);
 
-//email field ==============================================
-const handleInputEmail = (event) => {
-  dataNewUser.email = event.target.value;
-  isEmailValid(dataNewUser.email, errorsFromNewUser.email);
+const validateField = (dataName, validate, errorFieldName) => {
+  if (dataName === "rePassword") {
+    validate(
+      dataNewUser[dataName],
+      dataNewUser.password,
+      errorsFromNewUser[errorFieldName]
+    );
+  } else {
+    validate(dataNewUser[dataName], errorsFromNewUser[errorFieldName]);
+  }
 };
-const handleFocusEmail = () => {
-  isEmailValid(dataNewUser.email, errorsFromNewUser.email);
+
+// handle field ===================================================
+const handleInput = (event, dataName, validate, errorFieldName) => {
+  dataNewUser[dataName] = event.target.value;
+  validateField(dataName, validate, errorFieldName);
 };
-const handleBlurEmail = () => {
-  isEmailValid(dataNewUser.email, errorsFromNewUser.email);
+const handleFocus = (dataName, validate, errorFieldName) => {
+  validateField(dataName, validate, errorFieldName);
 };
-//firstname field ===========================================
-const handleImputFirstname = (event) => {
-  dataNewUser.firstname = event.target.value;
-  isFirstNameValid(dataNewUser.firstname, errorsFromNewUser.firstname);
-};
-const handleFocusFirstname = () => {
-  isFirstNameValid(dataNewUser.firstname, errorsFromNewUser.firstname);
-};
-const handleBlurFirstname = () => {
-  isFirstNameValid(dataNewUser.firstname, errorsFromNewUser.firstname);
-};
-//secondname field ===========================================
-const handleImputSecondname = (event) => {
-  dataNewUser.secondname = event.target.value;
-  isSecondnameValid(dataNewUser.secondname, errorsFromNewUser.secondname);
-};
-const handleFocusSecondname = () => {
-  isSecondnameValid(dataNewUser.secondname, errorsFromNewUser.secondname);
-};
-const handleBlurSecondname = () => {
-  isSecondnameValid(dataNewUser.secondname, errorsFromNewUser.secondname);
-};
-//lastname filed ============================================
-const handleImputLastname = (event) => {
-  dataNewUser.lastname = event.target.value;
-  isLastnameValid(dataNewUser.lastname, errorsFromNewUser.lastname);
-};
-const handleFocusLastname = () => {
-  isLastnameValid(dataNewUser.lastname, errorsFromNewUser.lastname);
-};
-const handleBlurLastname = () => {
-  isLastnameValid(dataNewUser.lastname, errorsFromNewUser.lastname);
-};
-//password field =============================================
-const handleImputPassword = (event) => {
-  dataNewUser.password = event.target.value;
-  isPasswordValid(dataNewUser.password, errorsFromNewUser.password);
-};
-const handleFocusPassword = () => {
-  isPasswordValid(dataNewUser.password, errorsFromNewUser.password);
-};
-const handleBlurPassword = () => {
-  isPasswordValid(dataNewUser.password, errorsFromNewUser.password);
-};
-//rePassword field ===========================================
-const handleImputRePassword = (event) => {
-  dataNewUser.rePassword = event.target.value;
-  isRePasswordValid(
-    dataNewUser.rePassword,
-    dataNewUser.password,
-    errorsFromNewUser.rePassword
-  );
-};
-const handleFocusRePsword = () => {
-  isRePasswordValid(
-    dataNewUser.rePassword,
-    dataNewUser.password,
-    errorsFromNewUser.rePassword
-  );
-};
-const handleBlurRePassword = () => {
-  isRePasswordValid(
-    dataNewUser.rePassword,
-    dataNewUser.password,
-    errorsFromNewUser.rePassword
-  );
+const handleBlur = (dataName, validate, errorFieldName) => {
+  validateField(dataName, validate, errorFieldName);
 };
 
 // goBack ====================================================

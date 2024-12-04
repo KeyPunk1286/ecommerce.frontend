@@ -1,64 +1,70 @@
 <template>
   <div class="customer-table">
-    <div class="customer-table__panel-title">Add new customer</div>
-    <div class="customer-table__panel-main panel-main">
-      <UiField label="title" :errorsFromData="errorsFromNewCustomer.title">
-        <UiInput
-          type="text"
-          placeholder="Enter title customer"
-          :value="dataNewCustomer.title"
-          @input="handleInputTitle"
-          @focus="handleFocusTitle"
-          @blur="handleBlurTitle"
-        />
-      </UiField>
-
-      <UiField label="user_id">
-        <select
-          class="panel-main__select"
-          v-model="dataNewCustomer.user_id"
-          @change="handleSelectUserId"
-          @focus="handleFocusUserID"
-          @blur="handleBlurUserID"
-        >
-          <option value="">select user_id</option>
-          <option v-for="user in allUserId" :key="user.id" :value="user.id">
-            {{ user.id }}
-          </option>
-        </select>
-      </UiField>
-
-      <UiField
-        class="panel-main__checkbox"
-        label="Status"
-        :errorsFromData="errorsFromNewCustomer.status"
-      >
-        <div>Select the status: active shop or not.</div>
-        <div>
-          <input
-            type="checkbox"
-            id="activeInput"
-            :checked="dataNewCustomer.status === 'active'"
-            @change="handleCheckboxChange"
+    <div v-if="isLoading">Loading...</div>
+    <div v-else>
+      <div class="customer-table__panel-title">Add new customer</div>
+      <div class="customer-table__panel-main panel-main">
+        <UiField label="title" :errorsFromData="errorsFromNewCustomer.title">
+          <UiInput
+            type="text"
+            placeholder="Enter title customer"
+            :value="dataNewCustomer.title"
+            @input="handleInput($event, 'title', isTitleValid, 'title')"
+            @focus="handleFocus('title', isTitleValid, 'title')"
+            @blur="handleBlur('title', isTitleValid, 'title')"
           />
-          <label for="activeInput">active?</label>
-        </div>
-      </UiField>
-    </div>
-    <div class="customer-table__button-panel button-panel">
-      <UiButton @click="handleClickGoBack"
-        ><i class="fa-solid fa-backward"></i> Back</UiButton
-      >
-      <button class="button-panel__save" @click="handleSubmitNewCustomer">
-        <i class="fa-regular fa-floppy-disk"></i> Add
-      </button>
+        </UiField>
+
+        <UiField
+          label="user_id"
+          :errorsFromData="errorsFromNewCustomer.user_id"
+        >
+          <select
+            class="panel-main__select"
+            v-model="dataNewCustomer.user_id"
+            @change="handleInput(null, 'user_id', isUserIdValid, 'user_id')"
+            @focus="handleFocus('user_id', isUserIdValid, 'user_id')"
+            @blur="handleBlur('user_id', isUserIdValid, 'user_id')"
+          >
+            <option value="">select user_id</option>
+            <option v-for="user in allUserId" :key="user.id" :value="user.id">
+              {{ user.id }}
+            </option>
+          </select>
+        </UiField>
+
+        <UiField
+          class="panel-main__checkbox"
+          label="Status"
+          :errorsFromData="errorsFromNewCustomer.status"
+        >
+          <div>Select the status: active shop or not.</div>
+          <div>
+            <input
+              type="checkbox"
+              id="activeInput"
+              :checked="dataNewCustomer.status === 'active'"
+              @change="handleInput($event, 'status', isStatusVAlid, 'status')"
+            />
+            <label for="activeInput">active?</label>
+          </div>
+        </UiField>
+      </div>
+      <div class="customer-table__button-panel button-panel">
+        <UiButton @click="handleClickGoBack"
+          ><i class="fa-solid fa-backward"></i> Back</UiButton
+        >
+        <button class="button-panel__save" @click="handleSubmitNewCustomer">
+          <i class="fa-regular fa-floppy-disk"></i> Add
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import axios from "axios";
-import { reactive, onMounted } from "vue";
+import { ref, reactive, onMounted } from "vue";
 
 import {
   dataNewCustomer,
@@ -75,45 +81,42 @@ import {
 const emit = defineEmits(["clickGoBack"]);
 const handleClickGoBack = (event) => emit("clickGoBack", event);
 
-// let isLoading = ref(true);
+const isLoading = ref(false);
 
-//title field ==================================================
-const handleInputTitle = (event) => {
-  dataNewCustomer.title = event.target.value;
-  isTitleValid(dataNewCustomer.title, errorsFromNewCustomer.title);
-};
-const handleFocusTitle = () => {
-  isTitleValid(dataNewCustomer.title, errorsFromNewCustomer.title);
-};
-const handleBlurTitle = () => {
-  isTitleValid(dataNewCustomer.title, errorsFromNewCustomer.title);
-};
-
-//user_id field ==================================================
+// load  user id =====================================================
 const allUserId = reactive([]);
 const getAllUserId = async () => {
+  isLoading.value = true;
   try {
     const response = await axios.get("http://localhost:8888/users/all");
     allUserId.splice(0, allUserId.length, ...response.data);
   } catch (error) {
     console.error("Error fetching customers:", error);
+  } finally {
+    isLoading.value = false;
   }
 };
-const handleSelectUserId = () => {
-  isUserIdValid(dataNewCustomer.user_id, errorsFromNewCustomer.user_id);
-};
-const handleFocusUserID = () => {
-  isUserIdValid(dataNewCustomer.user_id, errorsFromNewCustomer.user_id);
-};
-const handleBlurUserID = () => {
-  isUserIdValid(dataNewCustomer.user_id, errorsFromNewCustomer.user_id);
-};
-//status field=====================================================
-const handleCheckboxChange = (event) => {
-  dataNewCustomer.status = event.target.checked ? "active" : "inactive";
 
-  isStatusVAlid(dataNewCustomer.status, errorsFromNewCustomer.status);
+// validate section =========================================================
+const validateField = (dataName, validate, errorFieldName) => {
+  validate(dataNewCustomer[dataName], errorsFromNewCustomer[errorFieldName]);
 };
+const handleInput = (event, dataName, validate, errorFieldName) => {
+  const inputType = event?.target?.type;
+  if (inputType === "checkbox") {
+    dataNewCustomer[dataName] = event.target.checked ? "active" : "inactive";
+  } else if (event && event.target) {
+    dataNewCustomer[dataName] = event.target.value;
+  }
+  validateField(dataName, validate, errorFieldName);
+};
+const handleFocus = (dataName, validate, errorFieldName) => {
+  validateField(dataName, validate, errorFieldName);
+};
+const handleBlur = (dataName, validate, errorFieldName) => {
+  validateField(dataName, validate, errorFieldName);
+};
+
 //submit ============================================================
 const doRegisterNewShop = async (data = {}) => {
   return await axios.post("http://localhost:8888/customers", data);
@@ -127,6 +130,7 @@ const handleSubmitNewCustomer = async () => {
         user_id: dataNewCustomer.user_id,
         status: dataNewCustomer.status,
       };
+
       await doRegisterNewShop(POST_DATA);
 
       dataNewCustomer.title = "";

@@ -26,7 +26,7 @@ export const isUserIdValid = (value, errorData) => {
   errorData.isDirty = true;
   errorData.errors = [];
 
-  if (value.length < 1) {
+  if (value === undefined || value === "") {
     errorData.errors.push("User_id is required!");
     return false;
   }
