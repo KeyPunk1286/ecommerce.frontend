@@ -1,62 +1,74 @@
 <template>
   <div class="user-edit">
-    <div class="user-edit__panel-title">
-      Edit user: <span>{{ user.email }}</span>
-    </div>
-    <div class="user-edit__panel-main">
-      <UiField label="Email" :errorsFromData="errorsFromNewUser.email">
-        <UiInput
-          type="text"
-          placeholder="enter email"
-          :value="user.email"
-          @input="handleImputEmail"
-          @focus="handleFocusEmail"
-          @blur="handleBlurEmail"
-        />
-      </UiField>
-      <UiField label="Firstname" :errorsFromData="errorsFromNewUser.firstname">
-        <UiInput
-          type="text"
-          placeholder="enter firstname"
-          :value="user.firstname"
-          @input="handleImputFirstname"
-          @focus="handleFocusFirstname"
-          @blur="handleBlurFirstname"
-        />
-      </UiField>
-      <UiField
-        label="Secondname"
-        :errorsFromData="errorsFromNewUser.secondname"
-      >
-        <UiInput
-          type="text"
-          placeholder="enter secondname"
-          :value="user.secondname"
-          @input="handleImputSecondname"
-          @focus="handleFocusSecondname"
-          @blur="handleBlurSecondname"
-        />
-      </UiField>
-      <UiField label="lastname" :errorsFromData="errorsFromNewUser.lastname">
-        <UiInput
-          type="text"
-          placeholder="enter lastname"
-          :value="user.lastname"
-          @input="handleImputLastname"
-          @focus="handleFocusLastname"
-          @blur="handleBlurLastname"
-        />
-      </UiField>
-    </div>
+    <div v-if="isLoading">Loading...</div>
+    <div v-else>
+      <div class="user-edit__panel-title">
+        Edit user: <span>{{ user.email }}</span>
+      </div>
+      <div class="user-edit__panel-main">
+        <UiField label="Email" :errorsFromData="errorsFromNewUser.email">
+          <UiInput
+            type="text"
+            placeholder="enter email"
+            :value="user.email"
+            @input="handleInput($event, 'email', isEmailValid, 'email')"
+            @focus="handleFocus('email', isEmailValid, 'email')"
+            @blur="handleBlur('email', isEmailValid, 'email')"
+          />
+        </UiField>
+        <UiField
+          label="Firstname"
+          :errorsFromData="errorsFromNewUser.firstname"
+        >
+          <UiInput
+            type="text"
+            placeholder="enter firstname"
+            :value="user.firstname"
+            @input="
+              handleInput($event, 'firstname', isFirstNameValid, 'firstname')
+            "
+            @focus="handleFocus('firstname', isFirstNameValid, 'firstname')"
+            @blur="handleBlur('firstname', isFirstNameValid, 'firstname')"
+          />
+        </UiField>
+        <UiField
+          label="Secondname"
+          :errorsFromData="errorsFromNewUser.secondname"
+        >
+          <UiInput
+            type="text"
+            placeholder="enter secondname"
+            :value="user.secondname"
+            @input="
+              handleInput($event, 'secondname', isSecondnameValid, 'secondname')
+            "
+            @focus="handleFocus('secondname', isSecondnameValid, 'secondname')"
+            @blur="handleBlur('secondname', isSecondnameValid, 'secondname')"
+          />
+        </UiField>
+        <UiField label="lastname" :errorsFromData="errorsFromNewUser.lastname">
+          <UiInput
+            type="text"
+            placeholder="enter lastname"
+            :value="user.lastname"
+            @input="
+              handleInput($event, 'lastname', isLastnameValid, 'lastname')
+            "
+            @focus="handleFocus('lastname', isLastnameValid, 'lastname')"
+            @blur="handleBlur('lastname', isLastnameValid, 'lastname')"
+          />
+        </UiField>
+      </div>
 
-    <div class="user-edit__button-panel button-panel">
-      <button class="button-panel__click-back" @click="handleClickGoBack">
-        <i class="fa-solid fa-backward"></i> Back
-      </button>
-      <button class="button-panel__click-save" @click="handleSaveChanges">
-        <i class="fa-regular fa-floppy-disk"></i>
-        Save
-      </button>
+      <div class="user-edit__button-panel button-panel">
+        <button class="button-panel__click-back" @click="handleClickGoBack">
+          <i class="fa-solid fa-backward"></i> Back
+        </button>
+        <button class="button-panel__click-save" @click="handleSaveChanges">
+          <i class="fa-regular fa-floppy-disk"></i>
+          Save
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -80,10 +92,13 @@ const props = defineProps({
     required: true,
   },
 });
+const emit = defineEmits(["clickGoBack"]);
 
+const isLoading = ref(false);
 const user = ref({});
 
 const loadDataById = async () => {
+  isLoading.value = true;
   try {
     const userData = await axios.get(
       `http://localhost:8888/users/${props.selectId}`
@@ -91,52 +106,24 @@ const loadDataById = async () => {
     user.value = userData?.data;
   } catch (error) {
     console.error("Error fetching user data:", error);
+  } finally {
+    isLoading.value = false;
   }
 };
 
-//email field ===================================================
-const handleImputEmail = (event) => {
-  user.value.email = event.target.value;
-  isEmailValid(user.value.email, errorsFromNewUser.email);
+// validate block ==================
+const validateField = (dataName, validate, errorFieldName) => {
+  validate(user.value[dataName], errorsFromNewUser[errorFieldName]);
 };
-const handleFocusEmail = () => {
-  isEmailValid(user.value.email, errorsFromNewUser.email);
+const handleInput = (event, dataName, validate, errorFieldName) => {
+  user.value[dataName] = event.target.value;
+  validateField(dataName, validate, errorFieldName);
 };
-const handleBlurEmail = () => {
-  isEmailValid(user.value.email, errorsFromNewUser.email);
+const handleFocus = (dataName, validate, errorFieldName) => {
+  validateField(dataName, validate, errorFieldName);
 };
-//firstname field ================================================
-const handleImputFirstname = (event) => {
-  user.value.firstname = event.target.value;
-  isFirstNameValid(user.value.firstname, errorsFromNewUser.firstname);
-};
-const handleFocusFirstname = () => {
-  isFirstNameValid(user.value.firstname, errorsFromNewUser.firstname);
-};
-const handleBlurFirstname = () => {
-  isFirstNameValid(user.value.firstname, errorsFromNewUser.firstname);
-};
-//secondname field ===============================================
-const handleImputSecondname = (event) => {
-  user.value.secondname = event.target.value;
-  isSecondnameValid(user.value.secondname, errorsFromNewUser.secondname);
-};
-const handleFocusSecondname = () => {
-  isSecondnameValid(user.value.secondname, errorsFromNewUser.secondname);
-};
-const handleBlurSecondname = () => {
-  isSecondnameValid(user.value.secondname, errorsFromNewUser.secondname);
-};
-//lastname field ==================================================
-const handleImputLastname = (event) => {
-  user.value.lastname = event.target.value;
-  isLastnameValid(user.value.lastname, errorsFromNewUser.lastname);
-};
-const handleFocusLastname = () => {
-  isLastnameValid(user.value.lastname, errorsFromNewUser.lastname);
-};
-const handleBlurLastname = () => {
-  isLastnameValid(user.value.lastname, errorsFromNewUser.lastname);
+const handleBlur = (dataName, validate, errorFieldName) => {
+  validateField(dataName, validate, errorFieldName);
 };
 
 const handleSaveChanges = async () => {
@@ -165,7 +152,6 @@ const handleSaveChanges = async () => {
   }
 };
 
-const emit = defineEmits(["clickGoBack"]);
 const handleClickGoBack = (event) => emit("clickGoBack", event);
 
 onMounted(async () => {

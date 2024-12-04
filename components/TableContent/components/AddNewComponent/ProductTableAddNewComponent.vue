@@ -9,18 +9,18 @@
             type="text"
             placeholder="Enter title"
             :value="dataNewProduct.title"
-            @input="handleInputTitle"
-            @focus="handleFocusTitle"
-            @blur="handleBlurTitle"
+            @input="handleInput($event, 'title', isTitleValid, 'title')"
+            @focus="handleFocus('title', isTitleValid, 'title')"
+            @blur="handleBlur('title', isTitleValid, 'title')"
           />
         </UiField>
         <UiField label="shop_id" :errorsFromData="errorsFromNewProduct.shop_id">
           <select
             class="main-panel__select"
             v-model="dataNewProduct.shop_id"
-            @change="handleInputShopId"
-            @focus="handleFocusShopId"
-            @blur="handleBlurShopId"
+            @change="handleInput(null, 'shop_id', isShopIdValid, 'shop_id')"
+            @focus="handleFocus('shop_id', isShopIdValid, 'shop_id')"
+            @blur="handleBlur('shop_id', isShopIdValid, 'shop_id')"
           >
             <option value="">select shop_id</option>
             <option v-for="shop in allShops" :key="shop.id" :value="shop.id">
@@ -37,9 +37,18 @@
             cols="30"
             rows="10"
             v-model="dataNewProduct.description"
-            @input="handleInputDescription"
-            @focus="handleFocusDescription"
-            @blur="handleBlurDescription"
+            @input="
+              handleInput(
+                null,
+                'description',
+                isDescriptionValid,
+                'description'
+              )
+            "
+            @focus="
+              handleFocus('description', isDescriptionValid, 'description')
+            "
+            @blur="handleBlur('description', isDescriptionValid, 'description')"
           ></textarea>
         </UiField>
         <UiField label="price" :errorsFromData="errorsFromNewProduct.price">
@@ -47,9 +56,9 @@
             type="number"
             placeholder="Enter product price"
             :value="dataNewProduct.price"
-            @input="handleInputPrice"
-            @focus="handleFocusPrice"
-            @blur="handleBlurPrice"
+            @input="handleInput($event, 'price', isPriceValid, 'price')"
+            @focus="handleFocus('price', isPriceValid, 'price')"
+            @blur="handleBlur('price', isPriceValid, 'price')"
           />
         </UiField>
       </div>
@@ -101,60 +110,20 @@ const getAllShops = async () => {
   }
 };
 
-// title field ==========================================
-const handleInputTitle = (event) => {
-  dataNewProduct.title = event.target.value;
-  isTitleValid(dataNewProduct.title, errorsFromNewProduct.title);
+const validateField = (dataName, validate, errorFieldName) => {
+  validate(dataNewProduct[dataName], errorsFromNewProduct[errorFieldName]);
 };
-const handleFocusTitle = () => {
-  isTitleValid(dataNewProduct.title, errorsFromNewProduct.title);
+const handleInput = (event, dataName, validate, errorFieldName) => {
+  if (event && event.target) {
+    dataNewProduct[dataName] = event.target.value;
+  }
+  validateField(dataName, validate, errorFieldName);
 };
-const handleBlurTitle = () => {
-  isTitleValid(dataNewProduct.title, errorsFromNewProduct.title);
+const handleFocus = (dataName, validate, errorFieldName) => {
+  validateField(dataName, validate, errorFieldName);
 };
-
-// shop_id field ==========================================
-const handleInputShopId = () => {
-  isShopIdValid(dataNewProduct.shop_id, errorsFromNewProduct.shop_id);
-};
-const handleFocusShopId = () => {
-  isShopIdValid(dataNewProduct.shop_id, errorsFromNewProduct.shop_id);
-};
-const handleBlurShopId = () => {
-  isShopIdValid(dataNewProduct.shop_id, errorsFromNewProduct.shop_id);
-};
-
-// description field ==========================================
-const handleInputDescription = () => {
-  isDescriptionValid(
-    dataNewProduct.description,
-    errorsFromNewProduct.description
-  );
-};
-const handleFocusDescription = () => {
-  isDescriptionValid(
-    dataNewProduct.description,
-    errorsFromNewProduct.description
-  );
-};
-const handleBlurDescription = () => {
-  isDescriptionValid(
-    dataNewProduct.description,
-    errorsFromNewProduct.description
-  );
-};
-
-// price field =====================================================
-const handleInputPrice = (event) => {
-  const inputPrice = event.target.value;
-  dataNewProduct.price = inputPrice === "" ? null : parseFloat(inputPrice);
-  isPriceValid(dataNewProduct.price, errorsFromNewProduct.price);
-};
-const handleFocusPrice = () => {
-  isPriceValid(dataNewProduct.price, errorsFromNewProduct.price);
-};
-const handleBlurPrice = () => {
-  isPriceValid(dataNewProduct.price, errorsFromNewProduct.price);
+const handleBlur = (dataName, validate, errorFieldName) => {
+  validateField(dataName, validate, errorFieldName);
 };
 
 // clic ====================================================

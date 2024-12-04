@@ -1,64 +1,61 @@
 <template>
   <div class="customer-edit">
-    <div class="customer-edit__title-panel">
-      Customer edit: {{ customer.title }}
-    </div>
-    <div class="customer-edit__main-panel main-panel">
-      <UiField label="title" :errorsFromData="errorsFromNewCustomer.title">
-        <UiInput
-          type="text"
-          placeholder="Enter title customer"
-          :value="customer.title"
-          @input="handleInputTitle"
-          @focus="handleFocusTitle"
-          @blur="handleBlurTitle"
-        />
-      </UiField>
+    <div v-if="isLoading">Loading...</div>
+    <div v-else>
+      <div class="customer-edit__title-panel">
+        Customer edit: {{ customer.title }}
+      </div>
+      <div class="customer-edit__main-panel main-panel">
+        <UiField label="title" :errorsFromData="errorsFromNewCustomer.title">
+          <UiInput
+            type="text"
+            placeholder="Enter title customer"
+            :value="customer.title"
+            @input="handleInput($event, 'title', isTitleValid, 'title')"
+            @focus="handleFocus('title', isTitleValid, 'title')"
+            @blur="handleBlur('title', isTitleValid, 'title')"
+          />
+        </UiField>
 
-      <UiField label="user_id" :errorsFromData="errorsFromNewCustomer.user_id">
-        <select
-          class="main-panel__select"
-          :value="customer.user_id"
-          @change="handleUserIdChange"
-          @focus="handleFocusUserId"
-          @blur="handleBlurUserId"
+        <UiField
+          label="user_id"
+          :errorsFromData="errorsFromNewCustomer.user_id"
         >
-          <option value="">select user</option>
-          <option v-for="user in allUsersId" :key="user.id" :value="user.id">
-            {{ user.id }} - {{ user.email }}
-          </option>
-        </select>
-      </UiField>
+          <select
+            class="main-panel__select"
+            v-model="customer.user_id"
+            @change="handleInput(null, 'user_id', isUserIdValid, 'user_id')"
+            @focus="handleFocus('user_id', isUserIdValid, 'user_id')"
+            @blur="handleBlur('user_id', isUserIdValid, 'user_id')"
+          >
+            <option value="">select user</option>
+            <option v-for="user in allUsersId" :key="user.id" :value="user.id">
+              {{ user.id }} - {{ user.email }}
+            </option>
+          </select>
+        </UiField>
 
-      <UiField label="Status" :errorsFromData="errorsFromNewCustomer.status">
-        <div class="main-panel__input">
-          <input
-            id="statusActive"
-            type="checkbox"
-            :checked="customer.status === 'active'"
-            @change="handleCheckboxChange('active')"
-          />
-          <label for="statusActive">active</label>
-        </div>
-        <div class="main-panel__input">
-          <input
-            id="statusInactive"
-            type="checkbox"
-            :checked="customer.status === 'inactive'"
-            @change="handleCheckboxChange('inactive')"
-          />
-          <label for="statusInactive">inactive</label>
-        </div>
-      </UiField>
-    </div>
+        <UiField label="Status" :errorsFromData="errorsFromNewCustomer.status">
+          <div class="main-panel__input">
+            <input
+              id="statusActive"
+              type="checkbox"
+              :checked="customer.status === 'active'"
+              @change="handleCheckboxChange"
+            />
+            <label for="statusActive">active</label>
+          </div>
+        </UiField>
+      </div>
 
-    <div class="customer-edit__button-panel button-panel">
-      <button class="button-panel__click-back" @click="handleClickGoBack">
-        <i class="fa-solid fa-backward"></i> Back
-      </button>
-      <button class="button-panel__click-save" @click="handleSaveChanges">
-        <i class="fa-regular fa-floppy-disk"></i> Save
-      </button>
+      <div class="customer-edit__button-panel button-panel">
+        <button class="button-panel__click-back" @click="handleClickGoBack">
+          <i class="fa-solid fa-backward"></i> Back
+        </button>
+        <button class="button-panel__click-save" @click="handleSaveChanges">
+          <i class="fa-regular fa-floppy-disk"></i> Save
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -84,9 +81,12 @@ const props = defineProps({
     required: true,
   },
 });
+
+const isLoading = ref(false);
 const customer = ref({});
 const allUsersId = reactive([]);
 const loadDataCustomer = async () => {
+  isLoading.value = true;
   try {
     const dataCustomerById = await axios.get(
       `http://localhost:8888/customers/${props.selectId}`
@@ -94,43 +94,45 @@ const loadDataCustomer = async () => {
     customer.value = dataCustomerById?.data;
   } catch (error) {
     console.error("Error fetching customer data:", error);
+  } finally {
+    isLoading.value = false;
   }
 };
 const getAllUsersId = async () => {
+  isLoading.value = true;
   try {
     const response = await axios.get("http://localhost:8888/users/all");
     allUsersId.splice(0, allUsersId.length, ...response?.data);
   } catch (error) {
     console.error("Error fetching users_id data:", error);
+  } finally {
+    isLoading.value = false;
   }
 };
-//title field =============================================
-const handleInputTitle = (event) => {
-  customer.value.title = event.target.value;
-  isTitleValid(customer.value.title, errorsFromNewCustomer.title);
+
+// validate block =====================
+const validateField = (dataName, validate, errorFieldName) => {
+  validate(customer.value[dataName], errorsFromNewCustomer[errorFieldName]);
 };
-const handleFocusTitle = () => {
-  isTitleValid(customer.value.title, errorsFromNewCustomer.title);
+const handleInput = (event, dataName, validate, errorFieldName) => {
+  if (event && event.target) {
+    customer.value[dataName] = event.target.value;
+  }
+  validateField(dataName, validate, errorFieldName);
+  console.log(customer.value.user_id);
 };
-const handleBlurTitle = () => {
-  isTitleValid(customer.value.title, errorsFromNewCustomer.title);
+const handleFocus = (dataName, validate, errorFieldName) => {
+  validateField(dataName, validate, errorFieldName);
 };
-//user_id field ============================================
-const handleUserIdChange = (event) => {
-  customer.value.user_id = event.target.value;
-  isUserIdValid(customer.value.user_id, errorsFromNewCustomer.user_id);
+const handleBlur = (dataName, validate, errorFieldName) => {
+  validateField(dataName, validate, errorFieldName);
 };
-const handleFocusUserId = () => {
-  isUserIdValid(customer.value.user_id, errorsFromNewCustomer.user_id);
-};
-const handleBlurUserId = () => {
-  isUserIdValid(customer.value.user_id, errorsFromNewCustomer.user_id);
-};
+
 //status field ============================================
 const handleCheckboxChange = (status) => {
-  if (customer.value.status === status) customer.value.status = "";
-  else customer.value.status = status;
-  isStatusVAlid(customer.value.status, errorsFromNewCustomer.status);
+  customer.value.status =
+    customer.value.status === "active" ? "inactive" : "active";
+  validateField("status", isStatusVAlid, "status");
 };
 // save changes ============================================
 const handleSaveChanges = async () => {
