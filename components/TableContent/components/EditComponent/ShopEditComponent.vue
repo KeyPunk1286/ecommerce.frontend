@@ -78,6 +78,7 @@ import {
   doValidateErrorForm,
   isNewShopFormValid,
 } from "@/components/TableContent/composables/validationForNewShop.js";
+import { toast } from "vue3-toastify";
 
 const emit = defineEmits(["clickGoBack"]);
 const handleClickGoBack = (event) => emit("clickGoBack", event);
@@ -89,7 +90,7 @@ const props = defineProps({
   },
 });
 
-const isLoading = ref(false);
+let isLoading = ref(false);
 const shop = ref({});
 const allCustomerId = reactive([]);
 const getAllCustomerId = async () => {
@@ -148,14 +149,25 @@ const handleSaveChanges = async () => {
 
       handleClickGoBack();
     } catch (error) {
-      if (error?.response.status === 400) {
-        const resDataErrors = error?.response.data.errors;
-        Object.entries(resDataErrors).forEach(([key, errorMessage]) => {
-          if (errorsFromNewShop[key] !== undefined) {
-            errorsFromNewShop[key].isDirty = true;
-            errorsFromNewShop[key].errors = errorMessage;
-          }
-        });
+      const status = error?.response?.status;
+      const message =
+        error?.response?.data?.message || error?.response?.data?.error;
+      const resDataErrors = error?.response?.data?.errors;
+
+      if (status === 400) {
+        if (message) {
+          toast.error(message);
+        }
+        if (resDataErrors) {
+          Object.entries(resDataErrors).forEach(([key, errorMessage]) => {
+            if (errorsFromNewShop[key] !== undefined) {
+              errorsFromNewShop[key].isDirty = true;
+              errorsFromNewShop[key].errors = errorMessage;
+            }
+          });
+        }
+      } else {
+        toast.error(message || "An unexpected error occurred.");
       }
     }
   }

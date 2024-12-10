@@ -56,6 +56,7 @@
 <script setup>
 import axios from "axios";
 import { ref, onMounted, reactive } from "vue";
+import { toast } from "vue3-toastify";
 
 import {
   dataNewShop,
@@ -72,7 +73,7 @@ import {
 const emit = defineEmits(["clickGoBack"]);
 const handleClickGoBack = (event) => emit("clickGoBack", event);
 
-const isLoading = ref(false);
+let isLoading = ref(false);
 
 const allCustomers = reactive([]);
 const getAllCustomers = async () => {
@@ -123,14 +124,24 @@ const handleSubmitNewShop = async () => {
 
       handleClickGoBack();
     } catch (error) {
-      if (error?.response.status === 400) {
-        const resDataErrors = error?.response.data.errors;
-        Object.entries(resDataErrors).forEach(([key, errorMessage]) => {
-          if (errorsFromNewShop[key] !== undefined) {
-            errorsFromNewShop[key].isDirty = true;
-            errorsFromNewShop[key].errors = errorMessage;
-          }
-        });
+      const status = error?.response?.status;
+      const message =
+        error?.response?.data?.message || error?.response?.data?.error;
+      const resDataErrors = error?.response?.data?.errors;
+      if (status === 400) {
+        if (message) {
+          toast.error(message);
+        }
+        if (resDataErrors) {
+          Object.entries(resDataErrors).forEach(([key, errorMessage]) => {
+            if (errorsFromNewShop[key] !== undefined) {
+              errorsFromNewShop[key].isDirty = true;
+              errorsFromNewShop[key].errors = errorMessage;
+            }
+          });
+        }
+      } else {
+        toast.error(message || "An unexpected error occurred.");
       }
     }
   }
