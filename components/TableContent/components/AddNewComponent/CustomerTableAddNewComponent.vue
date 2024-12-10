@@ -65,6 +65,7 @@
 <script setup>
 import axios from "axios";
 import { ref, reactive, onMounted } from "vue";
+import { toast } from "vue3-toastify";
 
 import {
   dataNewCustomer,
@@ -81,7 +82,7 @@ import {
 const emit = defineEmits(["clickGoBack"]);
 const handleClickGoBack = (event) => emit("clickGoBack", event);
 
-const isLoading = ref(false);
+let isLoading = ref(false);
 
 // load  user id =====================================================
 const allUserId = reactive([]);
@@ -139,14 +140,24 @@ const handleSubmitNewCustomer = async () => {
 
       handleClickGoBack();
     } catch (error) {
-      if (error?.response.status === 400) {
-        const resDataErrors = error?.response.data.errors;
-        Object.entries(resDataErrors).forEach(([key, errorMessage]) => {
-          if (errorsFromNewCustomer[key] !== undefined) {
-            errorsFromNewCustomer[key].isDirty = true;
-            errorsFromNewCustomer[key].errors = errorMessage;
-          }
-        });
+      const status = error?.response?.status;
+      const message =
+        error?.response?.data?.message || error?.response?.data?.error;
+      const resDataErrors = error?.response?.data?.errors;
+      if (status === 400) {
+        if (message) {
+          toast.error(message);
+        }
+        if (resDataErrors) {
+          Object.entries(resDataErrors).forEach(([key, errorMessage]) => {
+            if (errorsFromNewCustomer[key] !== undefined) {
+              errorsFromNewCustomer[key].isDirty = true;
+              errorsFromNewCustomer[key].errors = errorMessage;
+            }
+          });
+        }
+      } else {
+        toast.error(message || "An unexpected error occurred.");
       }
     }
   }

@@ -101,6 +101,7 @@
 <script setup>
 import axios from "axios";
 import { ref } from "vue";
+import { toast } from "vue3-toastify";
 
 import UiField from "~/components/UiField.vue";
 import {
@@ -159,7 +160,7 @@ const handleSubmitNewUser = async () => {
     try {
       const POST_DATA = {
         email: dataNewUser.email,
-        firstname: dataNewUser.firstname,
+        firstname: "dataNewUser.firstname",
         secondname: dataNewUser.secondname,
         lastname: dataNewUser.lastname,
         password: dataNewUser.password,
@@ -173,14 +174,27 @@ const handleSubmitNewUser = async () => {
 
       handleClickGoBack();
     } catch (error) {
-      if (error?.response.status === 400) {
-        const resDataErrors = error?.response.data.errors;
-        Object.entries(resDataErrors).forEach(([key, errorMessage]) => {
-          if (errorsFromNewUser[key] !== undefined) {
-            errorsFromNewUser[key].isDirty = true;
-            errorsFromNewUser[key].errors = errorMessage;
-          }
-        });
+      console.log(error);
+
+      const status = error?.response?.status;
+      const message =
+        error?.response?.data?.message || error?.response?.data?.error;
+      const resDataErrors = error?.response?.data?.errors;
+
+      if (status === 400) {
+        if (message) {
+          toast.error(message);
+        }
+        if (resDataErrors) {
+          Object.entries(resDataErrors).forEach(([key, errorMessage]) => {
+            if (errorsFromNewUser[key] !== undefined) {
+              errorsFromNewUser[key].isDirty = true;
+              errorsFromNewUser[key].errors = errorMessage;
+            }
+          });
+        }
+      } else {
+        toast.error(message || "An unexpected error occurred.");
       }
     }
   }
