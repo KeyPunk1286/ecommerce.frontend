@@ -6,19 +6,19 @@
       placeholder="Enter your email"
       :value="formData.email"
       :errorFormData="errorsFormData.email"
-      @input="handleInputEmail"
-      @focus="handleFocusEmail"
-      @blur="handleBlurEmail"
+      @input="handleInput($event, 'email', isEmailValid, 'email')"
+      @focus="handleFocus('email', isEmailValid, 'email')"
+      @blur="handleBlur('email', isEmailValid, 'email')"
     />
     <LoginFormField
       label="Password"
-      type="text"
+      type="password"
       placeholder="Enter your password"
       :value="formData.password"
       :errorFormData="errorsFormData.password"
-      @input="handleInputPassword"
-      @focus="handleFocusPassword"
-      @blur="handleBlurPassword"
+      @input="handleInput($event, 'password', isPasswordValid, 'password')"
+      @focus="handleFocus('password', isPasswordValid, 'password')"
+      @blur="handleBlur('password', isPasswordValid, 'password')"
     />
     <LoginFormSubmit @submit="handleSubmitForm" />
   </div>
@@ -49,26 +49,19 @@ import { toast } from "vue3-toastify";
 
 const router = useRouter();
 
-const handleFocusEmail = () => {
-  isEmailValid(formData.email, errorsFormData.email);
-};
-const handleInputEmail = (event) => {
-  formData.email = event.target.value;
-  isEmailValid(formData.email, errorsFormData.email);
-};
-const handleBlurEmail = () => {
-  isEmailValid(formData.email, errorsFormData.email);
+const validateField = (dataName, validate, errorFieldName) => {
+  validate(formData[dataName], errorsFormData[errorFieldName]);
 };
 
-const handleFocusPassword = () => {
-  isPasswordValid(formData.password, errorsFormData.password);
+const handleInput = (event, dataName, validate, errorFieldName) => {
+  formData[dataName] = event.target.value;
+  validateField(dataName, validate, errorFieldName);
 };
-const handleInputPassword = (event) => {
-  formData.password = event.target.value;
-  isPasswordValid(formData.password, errorsFormData.password);
+const handleFocus = (dataName, validate, errorFieldName) => {
+  validateField(dataName, validate, errorFieldName);
 };
-const handleBlurPassword = () => {
-  isPasswordValid(formData.password, errorsFormData.password);
+const handleBlur = (dataName, validate, errorFieldName) => {
+  validateField(dataName, validate, errorFieldName);
 };
 
 const doLoginUser = async (data = {}) => {

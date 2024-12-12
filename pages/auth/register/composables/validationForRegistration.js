@@ -9,13 +9,13 @@ export const isEmailValid = (value, errorData) => {
   errorData.errors = [];
 
   if (value.length < 1) {
-    errorData.errors = ["Field login is required!"];
+    errorData.errors.push("Field email is required!");
     return false;
   }
 
   const loginPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!loginPattern.test(value)) {
-    errorData.errors = ["Invalid login format!"];
+    errorData.errors.push("Invalid email format!");
     return false;
   }
 
@@ -27,28 +27,32 @@ export const isFirstNameValid = (value, errorData) => {
   errorData.errors = [];
 
   if (value.length < 1) {
-    errorData.errors = ["Field username is required!"];
+    errorData.errors.push("Field first name is required!");
     return;
   }
 
   if (value.length < 2) {
-    errorData.errors = ["Field username min length should be not less than 2"];
+    errorData.errors.push(
+      "Field first name min length should be not less than 2"
+    );
     return;
   }
 
   if (value.length > 20) {
-    errorData.errors = ["Field username max length should be no more than 20"];
+    errorData.errors.push(
+      "Field first name max length should be no more than 20"
+    );
     return;
   }
 
   const usernameRegex = /^[a-zA-Zа-яА-ЯёЁіІїЇґҐ]+$/;
   if (!usernameRegex.test(value)) {
-    errorData.errors = ["Username can only contain letters"];
+    errorData.errors.push("First name can only contain letters");
     return;
   }
 
   if (value.trim() !== value) {
-    errorData.errors = ["Username cannot have leading or trailing spaces"];
+    errorData.errors.push("First name cannot have leading or trailing spaces");
     return;
   }
 
@@ -70,32 +74,34 @@ export const isSecondNameValid = (value, errorData) => {
   errorData.errors = [];
 
   if (value.length < 1) {
-    errorData.errors = ["Field secondname is required!"];
+    errorData.errors.push("Field second name is required!");
     return;
   }
 
   if (value.length < 2) {
-    errorData.errors = [
-      "Field secondname min length should be not less than 2",
-    ];
+    errorData.errors.push(
+      "Field second name min length should be not less than 2"
+    );
+
     return;
   }
 
   if (value.length > 20) {
-    errorData.errors = [
-      "Field secondname max length should be no more than 20",
-    ];
+    errorData.errors.push(
+      "Field second name max length should be no more than 20"
+    );
+
     return;
   }
 
   const usernameRegex = /^[a-zA-Zа-яА-ЯёЁіІїЇґҐ]+$/;
   if (!usernameRegex.test(value)) {
-    errorData.errors = ["Secondname can only contain letters"];
+    errorData.errors.push("Second name can only contain letters");
     return;
   }
 
   if (value.trim() !== value) {
-    errorData.errors = ["Secondname cannot have leading or trailing spaces"];
+    errorData.errors.push("Second name cannot have leading or trailing spaces");
     return;
   }
 };
@@ -105,28 +111,32 @@ export const isLastNameValid = (value, errorData) => {
   errorData.errors = [];
 
   if (value.length < 1) {
-    errorData.errors = ["Field lastName is required!"];
+    errorData.errors.push("Field last name is required!");
     return;
   }
 
   if (value.length < 2) {
-    errorData.errors = ["Field lastName min length should be not less than 2"];
+    errorData.errors.push(
+      "Field last name min length should be not less than 2"
+    );
     return;
   }
 
   if (value.length > 20) {
-    errorData.errors = ["Field lastName max length should be no more than 20"];
+    errorData.errors.push(
+      "Field last name max length should be no more than 20"
+    );
     return;
   }
 
   const usernameRegex = /^[a-zA-Zа-яА-ЯёЁіІїЇґҐ]+$/;
   if (!usernameRegex.test(value)) {
-    errorData.errors = ["LastName can only contain letters"];
+    errorData.errors.push("Last name can only contain letters");
     return;
   }
 
   if (value.trim() !== value) {
-    errorData.errors = ["LastName cannot have leading or trailing spaces"];
+    errorData.errors.push("Last name cannot have leading or trailing spaces");
     return;
   }
 };
@@ -184,11 +194,11 @@ export const isRePaswordValid = (value, value2, errorData) => {
   errorData.errors = [];
 
   if (value.length < 1 || value2.length < 1) {
-    errorData.errors = ["Password fields cannot be empty."];
+    errorData.errors.push("Password fields cannot be empty.");
   }
 
   if (value !== value2) {
-    errorData.errors = ["The entered passwords do not match."];
+    errorData.errors.push("The entered passwords do not match.");
     return false;
   }
 

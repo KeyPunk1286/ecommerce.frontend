@@ -2,64 +2,66 @@
   <div class="registration__form">
     <RegistrationFormField
       type="text"
-      :value="registrationForm.email"
       placeholder="Enter your email"
       label="Email"
-      @input="handleEmailInput"
-      @focus="handleEmailFocus"
-      @blur="handleEmailBlur"
+      :value="registrationForm.email"
       :errorsFromData="errorsFromRegistrationData.email"
+      @input="handleInput($event, 'email', isEmailValid, 'email')"
+      @focus="handleFocus('email', isEmailValid, 'email')"
+      @blur="handleBlur('email', isEmailValid, 'email')"
     />
     <RegistrationFormField
       type="text"
-      :value="registrationForm.firstName"
       placeholder="Enter your first name"
       label="First name"
-      @input="handleFirstNameInput"
-      @focus="handleFirstNameFocus"
-      @blur="handleFirstNameBlur"
+      :value="registrationForm.firstName"
       :errorsFromData="errorsFromRegistrationData.firstName"
+      @input="handleInput($event, 'firstName', isFirstNameValid, 'firstName')"
+      @focus="handleFocus('firstName', isFirstNameValid, 'firstName')"
+      @blur="handleBlur('firstName', isFirstNameValid, 'firstName')"
     />
     <RegistrationFormField
       type="text"
-      :value="registrationForm.secondName"
       placeholder="Enter your second name"
       label="Second name"
-      @input="handleSecondNameInput"
-      @focus="handleSecondNameFocus"
-      @blur="handleSecondNameBlur"
+      :value="registrationForm.secondName"
       :errorsFromData="errorsFromRegistrationData.secondName"
+      @input="
+        handleInput($event, 'secondName', isSecondNameValid, 'secondName')
+      "
+      @focus="handleFocus('secondName', isSecondNameValid, 'secondName')"
+      @blur="handleBlur('secondName', isSecondNameValid, 'secondName')"
     />
     <RegistrationFormField
       type="text"
-      :value="registrationForm.lastname"
       placeholder="Enter your last name"
       label="Last name"
-      @input="handleLastNameInput"
-      @focus="handleLastNameFocus"
-      @blur="handleLastNameBlur"
+      :value="registrationForm.lastname"
       :errorsFromData="errorsFromRegistrationData.lastname"
+      @input="handleInput($event, 'lastname', isLastNameValid, 'lastname')"
+      @focus="handleFocus('lastname', isLastNameValid, 'lastname')"
+      @blur="handleBlur('lastname', isLastNameValid, 'lastname')"
     />
 
     <RegistrationFormField
       type="password"
-      :value="registrationForm.password"
       placeholder="Enter your password"
       label="Password"
-      @input="handlePasswordInput"
-      @focus="handlePasswordFocus"
-      @blur="handlePasswordBlur"
+      :value="registrationForm.password"
       :errorsFromData="errorsFromRegistrationData.password"
+      @input="handleInput($event, 'password', isPasswordValid, 'password')"
+      @focus="handleFocus('password', isPasswordValid, 'password')"
+      @blur="handleBlur('password', isPasswordValid, 'password')"
     />
     <RegistrationFormField
       type="password"
-      :value="registrationForm.rePassword"
       placeholder="Enter your password"
       label="Re-enter your password"
-      @input="handleRePasswordInput"
-      @focus="handleRePasswordFocus"
-      @blur="handleRePasswordBlur"
+      :value="registrationForm.rePassword"
       :errorsFromData="errorsFromRegistrationData.rePassword"
+      @input="handleInput($event, 'rePassword', isRePaswordValid, 'rePassword')"
+      @focus="handleFocus('rePassword', isRePaswordValid, 'rePassword')"
+      @blur="handleBlur('rePassword', isRePaswordValid, 'rePassword')"
     />
     <RegistrationFormSubmit @submit="handleSubmitRegistration" />
   </div>
@@ -90,124 +92,29 @@ import { toast } from "vue3-toastify";
 
 const router = useRouter();
 
-// firstName block
-const handleFirstNameInput = (event) => {
-  registrationForm.firstName = event.target.value;
-  isFirstNameValid(
-    registrationForm.firstName,
-    errorsFromRegistrationData.firstName
-  );
+const validateField = (dataName, validate, errorFieldName) => {
+  if (dataName === "rePassword") {
+    validate(
+      registrationForm[dataName],
+      registrationForm.password,
+      errorsFromRegistrationData[errorFieldName]
+    );
+  } else {
+    validate(
+      registrationForm[dataName],
+      errorsFromRegistrationData[errorFieldName]
+    );
+  }
 };
-const handleFirstNameFocus = () => {
-  isFirstNameValid(
-    registrationForm.firstName,
-    errorsFromRegistrationData.firstName
-  );
+const handleInput = (event, dataName, validate, errorFieldName) => {
+  registrationForm[dataName] = event.target.value;
+  validateField(dataName, validate, errorFieldName);
 };
-const handleFirstNameBlur = () => {
-  isFirstNameValid(
-    registrationForm.firstName,
-    errorsFromRegistrationData.firstName
-  );
+const handleFocus = (dataName, validate, errorFieldName) => {
+  validateField(dataName, validate, errorFieldName);
 };
-
-//email block
-const handleEmailInput = (event) => {
-  registrationForm.email = event.target.value;
-  isEmailValid(registrationForm.email, errorsFromRegistrationData.email);
-};
-const handleEmailFocus = () => {
-  isEmailValid(registrationForm.email, errorsFromRegistrationData.email);
-};
-const handleEmailBlur = () => {
-  isEmailValid(registrationForm.email, errorsFromRegistrationData.email);
-};
-
-//second name block
-const handleSecondNameInput = (event) => {
-  registrationForm.secondName = event.target.value;
-  isSecondNameValid(
-    registrationForm.secondName,
-    errorsFromRegistrationData.secondName
-  );
-};
-const handleSecondNameFocus = () => {
-  isSecondNameValid(
-    registrationForm.secondName,
-    errorsFromRegistrationData.secondName
-  );
-};
-const handleSecondNameBlur = () => {
-  isSecondNameValid(
-    registrationForm.secondName,
-    errorsFromRegistrationData.secondName
-  );
-};
-
-// last name block
-const handleLastNameInput = (event) => {
-  registrationForm.lastname = event.target.value;
-  isLastNameValid(
-    registrationForm.lastname,
-    errorsFromRegistrationData.lastname
-  );
-};
-const handleLastNameFocus = () => {
-  isLastNameValid(
-    registrationForm.lastname,
-    errorsFromRegistrationData.lastname
-  );
-};
-const handleLastNameBlur = () => {
-  isLastNameValid(
-    registrationForm.lastname,
-    errorsFromRegistrationData.lastname
-  );
-};
-
-//password block
-const handlePasswordInput = (event) => {
-  registrationForm.password = event.target.value;
-  isPasswordValid(
-    registrationForm.password,
-    errorsFromRegistrationData.password
-  );
-};
-const handlePasswordFocus = () => {
-  isPasswordValid(
-    registrationForm.password,
-    errorsFromRegistrationData.password
-  );
-};
-const handlePasswordBlur = () => {
-  isPasswordValid(
-    registrationForm.password,
-    errorsFromRegistrationData.password
-  );
-};
-
-//rePassword block
-const handleRePasswordInput = (event) => {
-  registrationForm.rePassword = event.target.value;
-  isRePaswordValid(
-    registrationForm.rePassword,
-    registrationForm.password,
-    errorsFromRegistrationData.rePassword
-  );
-};
-const handleRePasswordFocus = () => {
-  isRePaswordValid(
-    registrationForm.rePassword,
-    registrationForm.password,
-    errorsFromRegistrationData.rePassword
-  );
-};
-const handleRePasswordBlur = () => {
-  isRePaswordValid(
-    registrationForm.rePassword,
-    registrationForm.password,
-    errorsFromRegistrationData.rePassword
-  );
+const handleBlur = (dataName, validate, errorFieldName) => {
+  validateField(dataName, validate, errorFieldName);
 };
 
 const doRegistrationUser = async (data = {}) => {
