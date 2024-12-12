@@ -45,6 +45,7 @@ import useLocalStorage from "~/composables/useLocalStorage.js";
 
 import { ACCESS_TOKEN_STORAGE_KEY } from "~/constants/global.js";
 import { useAuthStore } from "~/stores/auth";
+import { toast } from "vue3-toastify";
 
 const router = useRouter();
 
@@ -94,17 +95,25 @@ const handleSubmitForm = async () => {
       const authStore = useAuthStore();
       authStore.setAccessToken(token);
 
-      // await router.push("/");
+      await router.push("/");
     } catch (e) {
-      if (e?.response.status === 401) {
-        Object.entries(e?.response?.data?.errors).forEach(
-          ([key, errorMessage]) => {
+      const status = e?.response?.status;
+      const message = e?.response?.data?.message || e?.response?.data?.error;
+      const resDataErrors = e?.response?.data?.errors;
+      if (status === 401) {
+        if (message) {
+          toast.error(message);
+        }
+        if (resDataErrors) {
+          Object.entries(resDataErrors).forEach(([key, errorMessage]) => {
             if (errorsFormData[key] !== undefined) {
               errorsFormData[key].isDirty = true;
               errorsFormData[key].errors = errorMessage;
             }
-          }
-        );
+          });
+        }
+      } else {
+        toast.error(message || "An unexpected error occurred.");
       }
     }
   }
