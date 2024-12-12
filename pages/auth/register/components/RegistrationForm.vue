@@ -86,6 +86,8 @@ import {
 
 import axios from "axios";
 
+import { toast } from "vue3-toastify";
+
 const router = useRouter();
 
 // firstName block
@@ -227,19 +229,27 @@ const handleSubmitRegistration = async () => {
       };
 
       await doRegistrationUser(dataThatWillSend);
-      // await router.push("/auth/login");
+      await router.push("/auth/login");
     } catch (e) {
-      if (e?.status === 401) {
-        Object.entries(e?.response?.data?.errors).forEach(
-          ([key, errorMessages]) => {
+      const status = e?.response?.status;
+      const message = e?.response?.data?.message || e?.response?.data?.error;
+      const resDataErrors = e?.response?.data?.errors;
+
+      if (status === 401) {
+        if (message) {
+          toast.error(message);
+        }
+        if (resDataErrors) {
+          Object.entries(resDataErrors).forEach(([key, errorMessages]) => {
             if (errorsFromRegistrationData[key] !== undefined) {
               errorsFromRegistrationData[key].isDirty = true;
               errorsFromRegistrationData[key].errors = errorMessages;
             }
-          }
-        );
+          });
+        }
+      } else {
+        toast.error(message || "An unexpected error occurred.");
       }
-      console.log("ERROR:", e);
     }
   }
 };
