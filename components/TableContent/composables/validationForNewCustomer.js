@@ -9,13 +9,11 @@ export const isTitleValid = (value, errorData) => {
     return false;
   }
   if (value.length > 20) {
-    errorData.errors.push(
-      "Field username max length should be no more than 20"
-    );
+    errorData.errors.push("Field title max length should be no more than 20");
     return false;
   }
   if (value.trim().length !== value.length) {
-    errorData.errors.push("Field Shop should not start or end with spaces");
+    errorData.errors.push("Field title should not start or end with spaces");
     return false;
   }
 
@@ -32,7 +30,7 @@ export const isUserIdValid = (value, errorData) => {
   }
 
   if (!/^\d+$/.test(value)) {
-    errorData.errors.push("The field value must be an integer.");
+    errorData.errors.push("The user_id value must be an integer.");
     return false;
   }
 
@@ -44,7 +42,7 @@ export const isStatusVAlid = (value, errorData) => {
   errorData.errors = [];
 
   if (value === "") {
-    errorData.errors.push("The shop status is required.");
+    errorData.errors.push("The customer status is required.");
     return false;
   }
 };

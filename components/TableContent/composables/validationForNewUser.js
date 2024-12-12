@@ -7,7 +7,7 @@ export const isEmailValid = (value, errorData) => {
 
   // isRequired
   if (value.length < 1) {
-    errorData.errors.push("Field Email is required!");
+    errorData.errors.push("Field email is required!");
     return false;
   }
 
@@ -27,32 +27,32 @@ export const isFirstNameValid = (value, errorData) => {
   errorData.errors = [];
 
   if (value.length < 1) {
-    errorData.errors.push("Field username is required!");
+    errorData.errors.push("Field first name is required!");
     return;
   }
 
   if (value.length < 2) {
     errorData.errors.push(
-      "Field username min length should be not less than 2"
+      "Field first name min length should be not less than 2"
     );
     return;
   }
 
   if (value.length > 20) {
     errorData.errors.push(
-      "Field username max length should be no more than 20"
+      "Field first name max length should be no more than 20"
     );
     return;
   }
 
   const usernameRegex = /^[a-zA-Zа-яА-ЯёЁіІїЇґҐ]+$/;
   if (!usernameRegex.test(value)) {
-    errorData.errors.push("Username can only contain letters");
+    errorData.errors.push("First name can only contain letters");
     return;
   }
 
   if (value.trim() !== value) {
-    errorData.errors.push("Username cannot have leading or trailing spaces");
+    errorData.errors.push("First name cannot have leading or trailing spaces");
     return;
   }
 
@@ -65,32 +65,32 @@ export const isSecondnameValid = (value, errorData) => {
   errorData.errors = [];
 
   if (value.length < 1) {
-    errorData.errors.push("Field secondname is required!");
+    errorData.errors.push("Field second name is required!");
     return;
   }
 
   if (value.length < 2) {
     errorData.errors.push(
-      "Field secondname min length should be not less than 2"
+      "Field second name min length should be not less than 2"
     );
     return;
   }
 
   if (value.length > 20) {
     errorData.errors.push(
-      "Field secondname max length should be no more than 20"
+      "Field second name max length should be no more than 20"
     );
     return;
   }
 
   const usernameRegex = /^[a-zA-Zа-яА-ЯёЁіІїЇґҐ]+$/;
   if (!usernameRegex.test(value)) {
-    errorData.errors.push("Secondname can only contain letters");
+    errorData.errors.push("Second name can only contain letters");
     return;
   }
 
   if (value.trim() !== value) {
-    errorData.errors.push("Secondname cannot have leading or trailing spaces");
+    errorData.errors.push("Second name cannot have leading or trailing spaces");
     return;
   }
 
@@ -103,32 +103,32 @@ export const isLastnameValid = (value, errorData) => {
   errorData.errors = [];
 
   if (value.length < 1) {
-    errorData.errors.push("Field lastName is required!");
+    errorData.errors.push("Field last name is required!");
     return;
   }
 
   if (value.length < 2) {
     errorData.errors.push(
-      "Field lastName min length should be not less than 2"
+      "Field last name min length should be not less than 2"
     );
     return;
   }
 
   if (value.length > 20) {
     errorData.errors.push(
-      "Field lastName max length should be no more than 20"
+      "Field last name max length should be no more than 20"
     );
     return;
   }
 
   const usernameRegex = /^[a-zA-Zа-яА-ЯёЁіІїЇґҐ]+$/;
   if (!usernameRegex.test(value)) {
-    errorData.errors.push("LastName can only contain letters");
+    errorData.errors.push("Last name can only contain letters");
     return;
   }
 
   if (value.trim() !== value) {
-    errorData.errors.push("LastName cannot have leading or trailing spaces");
+    errorData.errors.push("Last name cannot have leading or trailing spaces");
     return;
   }
 

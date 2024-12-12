@@ -22,17 +22,19 @@ export const isTitleValid = (value, errorData) => {
   errorData.errors = [];
 
   if (value.length < 1) {
-    errorData.errors.push("Field Shop is required");
+    errorData.errors.push("Field title shop is required");
     return false;
   }
   if (value.length > 20) {
     errorData.errors.push(
-      "Field username max length should be no more than 20"
+      "Field title shop max length should be no more than 20"
     );
     return false;
   }
   if (value.trim().length !== value.length) {
-    errorData.errors.push("Field Shop should not start or end with spaces");
+    errorData.errors.push(
+      "Field title shop should not start or end with spaces"
+    );
     return false;
   }
   return true;
