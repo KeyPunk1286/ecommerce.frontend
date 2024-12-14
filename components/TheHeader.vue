@@ -1,14 +1,27 @@
 <template>
   <header class="header">
-    <div class="header__left">Logo</div>
-    <div class="header__right">
-      <div class="header__right__nav">
+    <div class="header__left-part">Logo</div>
+    <div class="header__right-part right-part">
+      <div class="right-part__link">
         <div
-          v-for="item in navMenu"
+          v-for="item in filteredNavMenu"
           :key="item.to"
-          class="header__right__nav-item"
+          class="right-part__list"
         >
-          <NuxtLink :to="item.to">{{ item.menuItemTitle }}</NuxtLink>
+          <NuxtLink
+            v-if="!item.isLogout"
+            class="right-part__item"
+            :to="item.to"
+            >{{ item.menuItemTitle }}</NuxtLink
+          >
+          <NuxtLink
+            v-else
+            class="right-part__item"
+            :to="'#'"
+            @click.prevent="handleLogout"
+            >{{ item.menuItemTitle }}</NuxtLink
+          >
+          <!-- <button v-else @click="handleLogout">{{ item.menuItemTitle }}</button> -->
         </div>
       </div>
     </div>
@@ -16,17 +29,27 @@
 </template>
 
 <script setup>
-import { reactive } from "vue";
+import { reactive, ref, computed, onMounted } from "vue";
+import { useAuthStore } from "@/stores/auth.js";
+import useLocalStorage from "@/composables/useLocalStorage.js";
+import { ACCESS_TOKEN_STORAGE_KEY } from "@/constants/global.js";
+
+const authStore = useAuthStore();
+const isAuthenticatedStatus = computed(() => !!authStore.accessToken);
+
+const { getItem, removeItem } = useLocalStorage();
+const detectToken = () => {
+  const token = getItem(ACCESS_TOKEN_STORAGE_KEY);
+  if (token) {
+    authStore.setAccessToken(token);
+  }
+};
 
 const navMenu = reactive([
   {
     menuItemTitle: "Home",
     to: "/",
   },
-  // {
-  //   menuItemTitle: "Test",
-  //   to: "/test"
-  // },
   {
     menuItemTitle: "About",
     to: "/about",
@@ -34,12 +57,41 @@ const navMenu = reactive([
   {
     menuItemTitle: "Login",
     to: "/auth/login",
+    isLogout: false,
+  },
+  {
+    menuItemTitle: "Logout",
+    to: "/auth/logout",
+    isLogout: true,
   },
   {
     menuItemTitle: "Register",
     to: "/auth/register",
   },
 ]);
+const filteredNavMenu = computed(() =>
+  navMenu.filter((menuItem) => {
+    if (isAuthenticatedStatus.value) {
+      return (
+        !menuItem.to.includes("/auth/login") &&
+        !menuItem.to.includes("/auth/register")
+      );
+    } else {
+      return !menuItem.isLogout;
+    }
+  })
+);
+
+const router = useRouter();
+const handleLogout = () => {
+  authStore.setAccessToken(null);
+  removeItem(ACCESS_TOKEN_STORAGE_KEY);
+  router.push("/auth/register");
+};
+
+onMounted(() => {
+  detectToken();
+});
 </script>
 
 <style scoped lang="scss">
@@ -54,32 +106,26 @@ const navMenu = reactive([
   justify-content: space-between;
   align-items: center;
 
-  &__left {
+  &__right-part {
   }
-  &__right {
-    &__nav {
-      width: 100%;
+}
+.right-part {
+  &__link {
+    width: 100%;
 
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-      &-item {
-        margin-left: 20px;
-
-        &:first-child {
-          margin-left: 0;
-
-          a {
-            color: #eeeaea;
-            text-decoration: none;
-
-            &:visited {
-              color: #bebbbb;
-            }
-          }
-        }
-      }
+    & > *:not(:first-child) {
+      margin-left: 20px;
+    }
+  }
+  &__item {
+    color: #eeeaea;
+    text-decoration: none;
+    &:visited {
+      color: #7c7b7b;
     }
   }
 }
